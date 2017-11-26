@@ -33,7 +33,7 @@ print 'Finished normalizing intervals: {}'.format(len(normalized_intervals))
 print 'First ten normalized examples...'
 print normalized_intervals[:10]
 
-number = 100000
+number = 1000
 # fetch 50000 outputs
 histone_mark = BigwigExtractor(data.output_histone['day0']['H3K27ac'])
 outputs = histone_mark(normalized_intervals[:number])
@@ -47,9 +47,10 @@ outputs = filter(lambda v: v==v, outputs)
 print np.argwhere(np.isnan(outputs))
 print "filtering done!"
 hist, bins = np.histogram(outputs, 'auto')
+print "writing before hist"
 plt.switch_backend('agg')
 plt.bar(bins[:-1], hist)
-plt.savefig('analyses/before_analysis_'+str(number)+'.png')
+plt.savefig('analyses/test_before_analysis_'+str(number)+'.png')
 plt.clf()
 print '[Before]  Number of bins: ', len(hist)
 new_hist, new_bins = [], []
@@ -57,10 +58,10 @@ first = True
 for i, bin in enumerate(bins):
     if i == len(bins)-1:
         continue
-    if bin <= 100:
+    if bin <= 20:
         new_hist.append(hist[i])
         new_bins.append(bin)
-    if bin > 100:
+    if bin > 20:
         if first:
             new_bins.append(bin)
             new_bins.append(bins[i+1])
@@ -71,5 +72,5 @@ for i, bin in enumerate(bins):
 print '[After] Number of bins: ', len(new_bins)
 print '[After] Number of hist: ', len(new_hist)
 plt.bar(new_bins[:-1], new_hist)
-plt.savefig('analyses/analysis_'+str(number)+'.png')
+plt.savefig('analyses/test_analysis_'+str(number)+'.png')
 plt.clf()

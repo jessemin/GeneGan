@@ -11,6 +11,7 @@ from keras.models import Sequential
 from keras.layers import Conv1D
 from keras.callbacks import Callback
 from keras import optimizers
+from keras import backend as K
 
 
 # normalizes intervals to 2000-bp bins with summit at center
@@ -22,11 +23,11 @@ def normalize_interval(interval):
     return normalized_interval
 
 
+# function that transforms output target 
 def double_log_transform(d):
     return np.log(1.0+np.log(1.0+d))
 
 
-from keras import backend as K
 # TODO: Need to check
 # https://chat.stackoverflow.com/rooms/156491/discussion-between-julio-daniel-reyes-and-eleanora
 # https://stackoverflow.com/questions/46619869/how-to-specify-the-correlation-coefficient-as-the-loss-function-in-keras
@@ -68,6 +69,7 @@ number = 100
 t0 = time.time()
 # shape: (number of samples, 2000, 5)
 inputs = bw_140bp_day0(normalized_intervals[:number])
+print inputs[0]
 t1 = time.time()
 print 'Time spent for getting signals of intervals: {}'.format(t1-t0)
 
@@ -157,6 +159,7 @@ print model.summary()
 # required for matplotlib
 plt.switch_backend('agg')
 
+# callback function for plotting loss graph for every 500 epochs
 class Loss_Plot_Callback(Callback):
     def on_train_begin(self, logs={}):
         self.losses = []
@@ -165,7 +168,7 @@ class Loss_Plot_Callback(Callback):
     def on_epoch_end(self, batch, logs={}):
         self.losses.append(logs['loss'])
         self.epochs += 1
-        if self.epochs % 10 == 0:
+        if self.epochs % 500 == 0:
             # summarize history for loss
             plt.plot(range(self.epochs), self.losses)
             plt.title('model loss')

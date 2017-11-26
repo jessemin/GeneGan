@@ -2,3 +2,5 @@
 model_*
 *.png
 genomelake/
+Models/
+Plots/

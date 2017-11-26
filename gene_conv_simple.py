@@ -1,5 +1,7 @@
 import copy
 import time
+import sys
+import os
 import numpy as np
 from pybedtools import Interval
 from pybedtools import BedTool
@@ -8,7 +10,7 @@ from data import Data_Directories
 import matplotlib.pyplot as plt
 # import Keras
 from keras.models import Sequential
-from keras.layers import Conv1D
+from keras.layers import Conv1D, Dropout
 from keras.callbacks import Callback
 from keras import optimizers
 from keras import backend as K
@@ -44,6 +46,21 @@ def pearson_loss(y_true, y_pred):
     return 1 - K.square(r)
 
 
+number = 267226
+loss_type = 'pearson'
+if len(sys.argv) != 1 and len(sys.argv) != 3:
+    print "Error: Wrong number of parameters!"
+    print "  1) python gene_simple_conv.py"
+    print "  2) python gene_simple_conv.py (number of samples) (type of loss)"
+    print "     ex) python gene_simple_conv.py 5000 'mse'"
+    sys.exit(-1)
+if len(sys.argv) == 3:
+    number = int(sys.argv[1])
+    loss_type = sys.argv[2]
+print "Configuration"
+print "Number of Samples: {}, Type of Loss: {}".format(number, loss_type)
+print "="*60
+
 # retrieve data
 data = Data_Directories()
 
@@ -63,8 +80,6 @@ print 'Finished normalizing intervals: {}'.format(len(normalized_intervals))
 print 'First ten normalized examples...'
 print normalized_intervals[:10]
 
-#number = 267226
-number = 100
 # fetch inputs
 t0 = time.time()
 # shape: (number of samples, 2000, 5)
@@ -83,7 +98,7 @@ outputs = np.expand_dims(outputs, axis=2)
 print 'Expanded Output Shape: ', outputs[0].shape
 
 '''
-SIMPLE CONV NET with 1 HIDDEN LAYER
+CNN with 3 HIDDEN LAYERS and 1 OUTPUT LAYER
 '''
 # build convolutional network with keras
 print "Building Keras sequential model..."
@@ -101,6 +116,8 @@ model.add(Conv1D(
     strides=1,
     input_shape=(2000, 5)))
 
+model.add(Dropout(0.2))
+
 # 2) build hidden layer with 7 filters of size 300
 print "Adding the second hidden layer..."
 hidden_filters_2 = 7
@@ -113,6 +130,8 @@ model.add(Conv1D(
     activation='relu',
     strides=1))
 
+model.add(Dropout(0.2))
+
 # 3) building hidden layer with 5 filters of size 200
 print "Adding the third hidden layer..."
 hidden_filters_3 = 5
@@ -124,6 +143,8 @@ model.add(Conv1D(
     padding='same',
     activation='relu',
     strides=1))
+
+model.add(Dropout(0.1))
 
 # 4) build output layer with 1 filter of size 20
 # NOTE: linear activation for the final layer
@@ -142,8 +163,6 @@ model.add(Conv1D(filters=output_filters,
 adam = optimizers.Adam(clipnorm=1.)
 
 # setting loss type
-loss_type = 'pearson'
-
 loss = pearson_loss
 if loss_type == 'pearson':
     loss = pearson_loss
@@ -168,14 +187,14 @@ class Loss_Plot_Callback(Callback):
     def on_epoch_end(self, batch, logs={}):
         self.losses.append(logs['loss'])
         self.epochs += 1
-        if self.epochs % 500 == 0:
+        if self.epochs % 10 == 0:
             # summarize history for loss
             plt.plot(range(self.epochs), self.losses)
             plt.title('model loss')
             plt.ylabel('loss')
             plt.xlabel('epoch')
-            plt.savefig('model_loss_simple_conv_pearson_'+str(self.epochs)+'.png')
-            self.model.save('model_'+str(self.epochs))
+            plt.savefig(os.path.join('Plots', 'model_loss_simple_conv_'+loss_type+"_"+str(self.epochs)+'.png'))
+            self.model.save(os.path.join('Models', 'model_'+loss_type+"_"+str(self.epochs)+".h5"))
 
 num_epochs = 1000000
 print "Fitting the model..."

@@ -1,0 +1,4 @@
+*.pyc
+model_*
+*.png
+genomelake/

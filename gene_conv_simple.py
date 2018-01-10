@@ -198,4 +198,4 @@ class Loss_Plot_Callback(Callback):
 
 num_epochs = 1000000
 print "Fitting the model..."
-model.fit(inputs, outputs, batch_size=512, epochs=num_epochs, callbacks=[Loss_Plot_Callback()])
+model.fit(inputs, outputs, batch_size=512, epochs=num_epochs, callbacks=[Loss_Plot_Callback()], validation_split=0.2, shuffle=True)

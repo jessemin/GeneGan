@@ -187,7 +187,7 @@ class Loss_Plot_Callback(Callback):
     def on_epoch_end(self, batch, logs={}):
         self.losses.append(logs['loss'])
         self.epochs += 1
-        if self.epochs % 10 == 0:
+        if self.epochs % 100 == 0:
             # summarize history for loss
             plt.plot(range(self.epochs), self.losses)
             plt.title('model loss')

@@ -73,6 +73,10 @@ print intervals[:10]
 # get atac-seq data for day0 with 140 base pairs
 bw_140bp_day0 = ArrayExtractor(data.input_atac['day0']['140'])
 print 'Finished extracting bigwig for day0, 140bp'
+bw_140bp_day3 = ArrayExtractor(data.input_atac['day3']['140'])
+print 'Finished extracting bigwig for day3, 140bp'
+bw_140bp_day6 = ArrayExtractor(data.input_atac['day6']['140'])
+print 'Finished extracting bigwig for day6, 140bp'
 
 # normalize intervals
 normalized_intervals = [normalize_interval(interval) for interval in intervals]
@@ -83,19 +87,56 @@ print normalized_intervals[:10]
 # fetch inputs
 t0 = time.time()
 # shape: (number of samples, 2000, 5)
-inputs = bw_140bp_day0(normalized_intervals[:number])
-print inputs[0]
+inputs1 = bw_140bp_day0(normalized_intervals[:number])
+print inputs1.shape
 t1 = time.time()
-print 'Time spent for getting signals of intervals: {}'.format(t1-t0)
+print 'Time spent for getting signals of intervals for day0 atac-seq: {}'.format(t1-t0)
+
+#fetch inputs
+t2 = time.time()
+inputs2 = bw_140bp_day3(normalized_intervals[:number])
+t3 = time.time()
+print 'Time spent for getting signals of intervals for day3 atac-seq: {}'.format(t3-t2)
+print inputs2.shape
+
+#vstack two inputs
+inputs = np.vstack((inputs1, inputs2))
+print inputs.shape
+
+#fetch validation inputs
+valid_inputs = bw_140bp_day6(normalized_intervals[:number])
+print valid_inputs.shape
 
 # fetch outputs
-histone_mark = BigwigExtractor(data.output_histone['day0']['H3K27ac'])
-outputs = histone_mark(normalized_intervals[:number])
-outputs = np.nan_to_num(outputs)
-outputs = double_log_transform(outputs)
-print 'Output Shape: ', outputs[0].shape
-outputs = np.expand_dims(outputs, axis=2)
-print 'Expanded Output Shape: ', outputs[0].shape
+histone_mark1 = BigwigExtractor(data.output_histone['day0']['H3K27ac'])
+outputs1 = histone_mark1(normalized_intervals[:number])
+outputs1 = np.nan_to_num(outputs1)
+outputs1 = double_log_transform(outputs1)
+print 'Output Shape: ', outputs1[0].shape
+outputs1 = np.expand_dims(outputs1, axis=2)
+print 'Expanded Output Shape: ', outputs1[0].shape
+
+# fetch outputs
+histone_mark2 = BigwigExtractor(data.output_histone['day3']['H3K27ac'])
+outputs2 = histone_mark2(normalized_intervals[:number])
+outputs2 = np.nan_to_num(outputs2)
+outputs2 = double_log_transform(outputs2)
+print 'Output Shape: ', outputs2[0].shape
+outputs2 = np.expand_dims(outputs2, axis=2)
+print 'Expanded Output Shape: ', outputs2[0].shape
+
+# fetch valid outputs
+histone_mark3 = BigwigExtractor(data.output_histone['day6']['H3K27ac'])
+valid_outputs = histone_mark3(normalized_intervals[:number])
+valid_outputs = np.nan_to_num(valid_outputs)
+valid_outputs = double_log_transform(valid_outputs)
+print 'Output Shape: ', valid_outputs.shape
+valid_outputs = np.expand_dims(valid_outputs, axis=2)
+print 'Expanded Output Shape: ', valid_outputs.shape
+
+#vstack two outputs
+outputs = np.vstack((outputs1, outputs2))
+print outputs.shape
 
 '''
 CNN with 3 HIDDEN LAYERS and 1 OUTPUT LAYER
@@ -170,7 +211,7 @@ if loss_type == 'mse':
     loss = 'mean_squared_error'
 
 
-print "Compiling a model with adam optimizer with MSE..."
+print "Compiling a model with adam optimizer with "+loss+"..."
 model.compile(loss=loss, optimizer=adam)
 
 print model.summary()
@@ -198,4 +239,5 @@ class Loss_Plot_Callback(Callback):
 
 num_epochs = 1000000
 print "Fitting the model..."
-model.fit(inputs, outputs, batch_size=512, epochs=num_epochs, callbacks=[Loss_Plot_Callback()], validation_split=0.2, shuffle=True)
+model.fit(inputs, outputs, batch_size=64, epochs=num_epochs, callbacks=[Loss_Plot_Callback()], validation_data=(valid_inputs, valid_outputs), shuffle=True)
+

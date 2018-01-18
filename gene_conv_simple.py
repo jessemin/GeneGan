@@ -211,7 +211,7 @@ if loss_type == 'mse':
     loss = 'mean_squared_error'
 
 
-print "Compiling a model with adam optimizer with "+loss+"..."
+print "Compiling a model with adam optimizer"
 model.compile(loss=loss, optimizer=adam)
 
 print model.summary()

@@ -32,6 +32,7 @@ FLAGS = flags.FLAGS
 flags.DEFINE_boolean('all', False, 'Process all intervals?')
 flags.DEFINE_integer('sample_num', 1000, 'Number of samples', lower_bound=1)
 flags.DEFINE_integer('window_size', 25025, 'Window size', lower_bound=2000)
+flags.DEFINE_integer('save_freq', 100, 'Frequency for saving models/plots', lower_bound=1)
 flags.DEFINE_string('input_norm_scheme', 'coarse', 'Normalization scheme for inputs')
 flags.DEFINE_string('loss', 'mse', 'Type of loss function to use')
 flags.DEFINE_string('output_dir', 'Plots', 'Directory to save the plots')
@@ -43,9 +44,15 @@ sample_num = FLAGS.sample_num
 loss_type = FLAGS.loss
 input_norm_scheme = FLAGS.input_norm_scheme
 window_size = FLAGS.window_size
+save_freq = FLAGS.save_freq
 process_all = FLAGS.all
 output_dir = FLAGS.output_dir
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+    os.makedirs(os.path.join(output_dir, "Pearson"))
 model_dir = FLAGS.model_dir
+if not os.path.exists(model_dir):
+    os.makedirs(model_dir)
 print "Configuration Details"
 print "Type of Loss: {}, Normalization Scheme: {}".format(loss_type, input_norm_scheme)
 if not process_all:
@@ -245,7 +252,7 @@ class Plot_Train_Loss_Callback(Callback):
     def on_epoch_end(self, batch, logs={}):
         self.losses.append(logs['loss'])
         self.epochs += 1
-        if self.epochs % 100 == 0:
+        if self.epochs % save_freq == 0:
             # summarize history for loss
             plt.plot(range(self.epochs), self.losses)
             plt.title('model loss')
@@ -261,25 +268,41 @@ class Compute_Pearson_Callback(Callback):
         self.x_val, self.y_val = x_val, y_val
 
     def on_train_begin(self, logs={}):
-        self.valid_losses = []
+        self.p_train_history, self.p_val_history = [], []
         self.epochs = 0
 
     def on_epoch_end(self, batch, logs={}):
+        self.epochs += 1
         x_train, y_train = self.x_train, self.y_train
         x_val, y_val = self.x_val, self.y_val
         y_pred_train = self.model.predict(x_train)
         p_train_list = []
         for y_t, y_pt in zip(y_train, y_pred_train):
             p_train_list.append(pearsonr(y_t.squeeze(), y_pt.squeeze()))
-        print len(p_train_list)
         p_train = np.mean(p_train_list)
         y_pred_val = self.model.predict(x_val)
         p_val_list = []
         for y_v, y_pv in zip(y_val, y_pred_val):
             p_val_list.append(pearsonr(y_v.squeeze(), y_pv.squeeze()))
-        p_valid = np.mean(p_val_list)
-        print len(p_val_list)
-        print "Train Pearson Corr: {}, Valid Pearson Corr: {}".format(p_train, p_valid)
+        p_val = np.mean(p_val_list)
+        print "Train Pearson Corr: {}, Valid Pearson Corr: {}".format(p_train, p_val)
+        self.p_train_history.append(p_train)
+        self.p_val_history.append(p_val)
+        if self.epochs % save_freq == 0:
+            # record pearson correlation for train
+            plt.plot(range(self.epochs), self.p_train_history)
+            plt.title('Pearson Correlation - Train')
+            plt.ylabel('pearson correlation')
+            plt.xlabel('epoch')
+            plt.savefig(os.path.join(output_dir, 'Pearson', 'train_'+loss_type+"_"+str(self.epochs)+'.png'))
+            plt.close()
+            plt.plot(range(self.epochs), self.p_val_history)
+            plt.title('Pearson Correlation - Val')
+            plt.ylabel('pearson correlation')
+            plt.xlabel('epoch')
+            plt.savefig(os.path.join(output_dir, 'Pearson', 'val_'+loss_type+"_"+str(self.epochs)+'.png'))
+            plt.close()
+
 
 num_epochs = 1000000
 print "Fitting the model..."

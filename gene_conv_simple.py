@@ -1,153 +1,144 @@
+'''
+Baseline Model for ATAC-seq to CHIP-seq model
+'''
+# gflag for python
+from absl import flags
+# default packages
 import copy
 import time
 import sys
 import os
+from scipy.stats.stats import pearsonr
 import numpy as np
-from pybedtools import Interval
-from pybedtools import BedTool
+# package for genomic data
+from pybedtools import Interval, BedTool
 from genomelake.extractors import ArrayExtractor, BigwigExtractor
-from data import Data_Directories
+# package for plotting
 import matplotlib.pyplot as plt
-# import Keras
+# Keras
 from keras.models import Sequential
 from keras.layers import Conv1D, Dropout
 from keras.callbacks import Callback
 from keras import optimizers
 from keras import backend as K
+# custom utility package
+from utils.compute_util import *
+# custom file path package
+from data import Data_Directories
 
 
-# normalizes intervals to 2000-bp bins with summit at center
-def normalize_interval(interval):
-    normalized_interval = copy.deepcopy(interval)
-    summit = int(interval.start) + int(interval[-1])
-    normalized_interval.start = summit-1000
-    normalized_interval.end = summit+1000
-    return normalized_interval
+# get flags
+FLAGS = flags.FLAGS
+flags.DEFINE_boolean('all', False, 'Process all intervals?')
+flags.DEFINE_integer('sample_num', 1000, 'Number of samples', lower_bound=1)
+flags.DEFINE_integer('window_size', 25025, 'Window size', lower_bound=2000)
+flags.DEFINE_string('input_norm_scheme', 'coarse', 'Normalization scheme for inputs')
+flags.DEFINE_string('loss', 'mse', 'Type of loss function to use')
+flags.DEFINE_string('output_dir', 'Plots', 'Directory to save the plots')
+flags.DEFINE_string('model_dir', 'Models', 'Directory to save the models')
+FLAGS(sys.argv)
 
-
-# function that transforms output target 
-def double_log_transform(d):
-    return np.log(1.0+np.log(1.0+d))
-
-
-# TODO: Need to check
-# https://chat.stackoverflow.com/rooms/156491/discussion-between-julio-daniel-reyes-and-eleanora
-# https://stackoverflow.com/questions/46619869/how-to-specify-the-correlation-coefficient-as-the-loss-function-in-keras
-def pearson_loss(y_true, y_pred):
-    x = y_true
-    y = y_pred
-    mx = K.mean(x)
-    my = K.mean(y)
-    xm, ym = x-mx, y-my
-    r_num = K.sum(np.multiply(xm,ym))
-    r_den = K.sqrt(np.multiply(K.sum(K.square(xm)), K.sum(K.square(ym))))
-    r = r_num / r_den
-    r = K.maximum(K.minimum(r, 1.0), -1.0)
-    return 1 - K.square(r)
-
-
-number = 267226
-loss_type = 'pearson'
-if len(sys.argv) != 1 and len(sys.argv) != 3:
-    print "Error: Wrong number of parameters!"
-    print "  1) python gene_simple_conv.py"
-    print "  2) python gene_simple_conv.py (number of samples) (type of loss)"
-    print "     ex) python gene_simple_conv.py 5000 'mse'"
-    sys.exit(-1)
-if len(sys.argv) == 3:
-    number = int(sys.argv[1])
-    loss_type = sys.argv[2]
-print "Configuration"
-print "Number of Samples: {}, Type of Loss: {}".format(number, loss_type)
+# default sample numbers, loss_type, and normalization scheme
+sample_num = FLAGS.sample_num
+loss_type = FLAGS.loss
+input_norm_scheme = FLAGS.input_norm_scheme
+window_size = FLAGS.window_size
+process_all = FLAGS.all
+output_dir = FLAGS.output_dir
+model_dir = FLAGS.model_dir
+print "Configuration Details"
+print "Type of Loss: {}, Normalization Scheme: {}".format(loss_type, input_norm_scheme)
+if not process_all:
+    print "# of Samples: {}".format(sample_num)
 print "="*60
 
 # retrieve data
 data = Data_Directories()
 
 # get intervals for day0 data
-intervals = list(BedTool(data.intervals['day0']))
-print '# of Intervals: {}'.format(len(intervals))
-print 'First ten raw intervals...'
-print intervals[:10]
+day0_intervals = list(BedTool(data.intervals['day0']))
+print '# of Intervals Extracted for day0: {}'.format(len(day0_intervals))
+
+# get intervals for day3 data
+day3_intervals = list(BedTool(data.intervals['day3']))
+print '# of Intervals Extracted for day3: {}'.format(len(day3_intervals))
 
 # get atac-seq data for day0 with 140 base pairs
 bw_140bp_day0 = ArrayExtractor(data.input_atac['day0']['140'])
 print 'Finished extracting bigwig for day0, 140bp'
+
+# get atac-seq data for day0 with 140 base pairs
 bw_140bp_day3 = ArrayExtractor(data.input_atac['day3']['140'])
 print 'Finished extracting bigwig for day3, 140bp'
-bw_140bp_day6 = ArrayExtractor(data.input_atac['day6']['140'])
-print 'Finished extracting bigwig for day6, 140bp'
 
-# normalize intervals
-normalized_intervals = [normalize_interval(interval) for interval in intervals]
-print 'Finished normalizing intervals: {}'.format(len(normalized_intervals))
-print 'First ten normalized examples...'
-print normalized_intervals[:10]
+# normalize day0 intervals
+normalized_day0_intervals = [normalize_interval(interval, window_size) for interval in day0_intervals if normalize_interval(interval, window_size)]
+print 'Finished normalizing day0 intervals!'
 
-# fetch inputs
+# normalize day3 intervals
+normalized_day3_intervals = [normalize_interval(interval, window_size) for interval in day3_intervals if normalize_interval(interval, window_size)]
+print 'Finished normalizing day3 intervals!'
+
+# fetch input (day0, ATAC-seq)
 t0 = time.time()
-# shape: (number of samples, 2000, 5)
-inputs1 = bw_140bp_day0(normalized_intervals[:number])
-print inputs1.shape
+# raw input shape: (number of samples, window_size, 5)
+# coarse normalized input: (number of samples, window_size, 10)
+inputs = None
+if process_all:
+    inputs = coarse_normalize_input(bw_140bp_day0(normalized_day0_intervals))
+else:
+    inputs = coarse_normalize_input(bw_140bp_day0(normalized_day0_intervals[:sample_num]))
+print inputs.shape
 t1 = time.time()
 print 'Time spent for getting signals of intervals for day0 atac-seq: {}'.format(t1-t0)
 
-#fetch inputs
+#fetch validation inputs (day3, ATAC-seq)
 t2 = time.time()
-inputs2 = bw_140bp_day3(normalized_intervals[:number])
+val_inputs = None
+if process_all:
+    val_inputs = coarse_normalize_input(bw_140bp_day3(normalized_day3_intervals))
+else:
+    val_inputs = coarse_normalize_input(bw_140bp_day3(normalized_day3_intervals[:sample_num]))
+print val_inputs.shape
 t3 = time.time()
 print 'Time spent for getting signals of intervals for day3 atac-seq: {}'.format(t3-t2)
-print inputs2.shape
 
-#vstack two inputs
-inputs = np.vstack((inputs1, inputs2))
-print inputs.shape
+# fetch outputs (day0, histone)
+histone_mark = BigwigExtractor(data.output_histone['day0']['H3K27ac'])
+output = None
+if process_all:
+    outputs = histone_mark(normalized_day0_intervals)
+else:
+    outputs = histone_mark(normalized_day0_intervals[:sample_num])
+outputs = np.nan_to_num(outputs)
+outputs = double_log_transform(outputs)
+print 'Output Shape (of one sample): ', outputs[0].shape
+outputs = np.expand_dims(outputs, axis=2)
+print 'Expanded Output Shape: ', outputs[0].shape
 
-#fetch validation inputs
-valid_inputs = bw_140bp_day6(normalized_intervals[:number])
-print valid_inputs.shape
-
-# fetch outputs
-histone_mark1 = BigwigExtractor(data.output_histone['day0']['H3K27ac'])
-outputs1 = histone_mark1(normalized_intervals[:number])
-outputs1 = np.nan_to_num(outputs1)
-outputs1 = double_log_transform(outputs1)
-print 'Output Shape: ', outputs1[0].shape
-outputs1 = np.expand_dims(outputs1, axis=2)
-print 'Expanded Output Shape: ', outputs1[0].shape
-
-# fetch outputs
-histone_mark2 = BigwigExtractor(data.output_histone['day3']['H3K27ac'])
-outputs2 = histone_mark2(normalized_intervals[:number])
-outputs2 = np.nan_to_num(outputs2)
-outputs2 = double_log_transform(outputs2)
-print 'Output Shape: ', outputs2[0].shape
-outputs2 = np.expand_dims(outputs2, axis=2)
-print 'Expanded Output Shape: ', outputs2[0].shape
-
-# fetch valid outputs
-histone_mark3 = BigwigExtractor(data.output_histone['day6']['H3K27ac'])
-valid_outputs = histone_mark3(normalized_intervals[:number])
-valid_outputs = np.nan_to_num(valid_outputs)
-valid_outputs = double_log_transform(valid_outputs)
-print 'Output Shape: ', valid_outputs.shape
-valid_outputs = np.expand_dims(valid_outputs, axis=2)
-print 'Expanded Output Shape: ', valid_outputs.shape
-
-#vstack two outputs
-outputs = np.vstack((outputs1, outputs2))
-print outputs.shape
+# fetch validation outputs (day3, histone)
+val_histone_mark = BigwigExtractor(data.output_histone['day3']['H3K27ac'])
+val_outputs = None
+if process_all:
+    val_outputs = val_histone_mark(normalized_day3_intervals[:sample_num])
+else:
+    val_outputs = val_histone_mark(normalized_day3_intervals[:sample_num])
+val_outputs = np.nan_to_num(val_outputs)
+val_outputs = double_log_transform(val_outputs)
+print 'Output Shape (of one sample): ', val_outputs[0].shape
+val_outputs = np.expand_dims(val_outputs, axis=2)
+print 'Expanded Output Shape: ', val_outputs[0].shape
 
 '''
-CNN with 3 HIDDEN LAYERS and 1 OUTPUT LAYER
+CNN with 6 HIDDEN LAYERS and 1 OUTPUT LAYER
 '''
 # build convolutional network with keras
 print "Building Keras sequential model..."
 model = Sequential()
 # 1) build hidden layer with 10 filters of size 500
 print "Adding the first hidden layer..."
-hidden_filters_1 = 15
-hidden_kernel_size_1 = 600
+hidden_filters_1 = 30
+hidden_kernel_size_1 = 10000
 
 model.add(Conv1D(
     filters=hidden_filters_1,
@@ -155,14 +146,14 @@ model.add(Conv1D(
     padding='same',
     activation='relu',
     strides=1,
-    input_shape=(2000, 5)))
+    input_shape=(window_size, 1)))
 
-model.add(Dropout(0.2))
+model.add(Dropout(0.1))
 
 # 2) build hidden layer with 7 filters of size 300
 print "Adding the second hidden layer..."
-hidden_filters_2 = 7
-hidden_kernel_size_2 = 300
+hidden_filters_2 = 15
+hidden_kernel_size_2 = 5000
 
 model.add(Conv1D(
     filters=hidden_filters_2,
@@ -171,12 +162,12 @@ model.add(Conv1D(
     activation='relu',
     strides=1))
 
-model.add(Dropout(0.2))
+model.add(Dropout(0.1))
 
 # 3) building hidden layer with 5 filters of size 200
 print "Adding the third hidden layer..."
-hidden_filters_3 = 5
-hidden_kernel_size_3 = 100
+hidden_filters_3 = 15
+hidden_kernel_size_3 = 2000
 
 model.add(Conv1D(
     filters=hidden_filters_3,
@@ -187,7 +178,33 @@ model.add(Conv1D(
 
 model.add(Dropout(0.1))
 
-# 4) build output layer with 1 filter of size 20
+# 4) building hidden layer with 5 filters of size 200
+print "Adding the third hidden layer..."
+hidden_filters_4 = 5
+hidden_kernel_size_4 = 500
+
+model.add(Conv1D(
+    filters=hidden_filters_4,
+    kernel_size=hidden_kernel_size_4,
+    padding='same',
+    activation='relu',
+    strides=1))
+
+model.add(Dropout(0.1))
+
+# 4) building hidden layer with 5 filters of size 200
+print "Adding the third hidden layer..."
+hidden_filters_5 = 3
+hidden_kernel_size_5 = 100
+
+model.add(Conv1D(
+    filters=hidden_filters_5,
+    kernel_size=hidden_kernel_size_5,
+    padding='same',
+    activation='relu',
+    strides=1))
+
+# 5) build output layer with 1 filter of size 20
 # NOTE: linear activation for the final layer
 print "Adding a output layer..."
 output_filters = 1
@@ -220,7 +237,7 @@ print model.summary()
 plt.switch_backend('agg')
 
 # callback function for plotting loss graph for every 500 epochs
-class Loss_Plot_Callback(Callback):
+class Plot_Train_Loss_Callback(Callback):
     def on_train_begin(self, logs={}):
         self.losses = []
         self.epochs = 0
@@ -234,10 +251,37 @@ class Loss_Plot_Callback(Callback):
             plt.title('model loss')
             plt.ylabel('loss')
             plt.xlabel('epoch')
-            plt.savefig(os.path.join('Plots', 'model_loss_simple_conv_'+loss_type+"_"+str(self.epochs)+'.png'))
-            self.model.save(os.path.join('Models', 'model_'+loss_type+"_"+str(self.epochs)+".h5"))
+            plt.savefig(os.path.join(output_dir, 'model_train_'+loss_type+"_"+str(self.epochs)+'.png'))
+            self.model.save(os.path.join(model_dir, 'model_'+loss_type+"_"+str(self.epochs)+".h5"))
+            plt.close()
+
+class Compute_Pearson_Callback(Callback):
+    def __init__(self, x_train, y_train, x_val, y_val):
+        self.x_train, self.y_train = x_train, y_train
+        self.x_val, self.y_val = x_val, y_val
+
+    def on_train_begin(self, logs={}):
+        self.valid_losses = []
+        self.epochs = 0
+
+    def on_epoch_end(self, batch, logs={}):
+        x_train, y_train = self.x_train, self.y_train
+        x_val, y_val = self.x_val, self.y_val
+        y_pred_train = self.model.predict(x_train)
+        p_train_list = []
+        for y_t, y_pt in zip(y_train, y_pred_train):
+            p_train_list.append(pearsonr(y_t.squeeze(), y_pt.squeeze()))
+        print len(p_train_list)
+        p_train = np.mean(p_train_list)
+        y_pred_val = self.model.predict(x_val)
+        p_val_list = []
+        for y_v, y_pv in zip(y_val, y_pred_val):
+            p_val_list.append(pearsonr(y_v.squeeze(), y_pv.squeeze()))
+        p_valid = np.mean(p_val_list)
+        print len(p_val_list)
+        print "Train Pearson Corr: {}, Valid Pearson Corr: {}".format(p_train, p_valid)
 
 num_epochs = 1000000
 print "Fitting the model..."
-model.fit(inputs, outputs, batch_size=64, epochs=num_epochs, callbacks=[Loss_Plot_Callback()], validation_data=(valid_inputs, valid_outputs), shuffle=True)
+model.fit(inputs, outputs, batch_size=64, epochs=num_epochs, callbacks=[Plot_Train_Loss_Callback(), Compute_Pearson_Callback(inputs, outputs, val_inputs, val_outputs)], validation_data=(val_inputs, val_outputs), shuffle=True)
 

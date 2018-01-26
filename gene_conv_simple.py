@@ -8,6 +8,7 @@ import copy
 import time
 import sys
 import os
+import random
 from scipy.stats.stats import pearsonr
 from sklearn.preprocessing import quantile_transform
 import numpy as np
@@ -34,11 +35,13 @@ flags.DEFINE_boolean('all', False, 'Process all intervals?')
 flags.DEFINE_integer('sample_num', 1000, 'Number of samples', lower_bound=1)
 flags.DEFINE_integer('window_size', 10001, 'Window size', lower_bound=2000)
 flags.DEFINE_integer('save_freq', 100, 'Frequency for saving models/plots', lower_bound=1)
+flags.DEFINE_integer('batch_size', 512, 'Batch size for training step')
 flags.DEFINE_string('input_norm_scheme', 'coarse', 'Normalization scheme for inputs')
 flags.DEFINE_string('output_norm_scheme', 'dl', 'Normalization scheme for outputs')
 flags.DEFINE_string('loss', 'mse', 'Type of loss function to use')
 flags.DEFINE_string('output_dir', 'Plots', 'Directory to save the plots')
 flags.DEFINE_string('model_dir', 'Models', 'Directory to save the models')
+flags.DEFINE_integer('num_epochs', 1000, 'Number of epochs for training')
 FLAGS(sys.argv)
 
 # default sample numbers, loss_type, and normalization scheme
@@ -48,19 +51,23 @@ input_norm_scheme = FLAGS.input_norm_scheme
 output_norm_scheme = FLAGS.output_norm_scheme
 window_size = FLAGS.window_size
 save_freq = FLAGS.save_freq
+batch_size = FLAGS.batch_size
 process_all = FLAGS.all
 output_dir = FLAGS.output_dir + "_" + output_norm_scheme
+num_epochs = FLAGS.num_epochs
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
     os.makedirs(os.path.join(output_dir, "Pearson"))
 model_dir = FLAGS.model_dir + "_" + output_norm_scheme
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
+print "=" * 80
 print "Configuration Details"
-print "Type of Loss: {}, Normalization Scheme: {}".format(loss_type, input_norm_scheme)
+print "Type of Loss: {}, Input Normalization Scheme: {}".format(loss_type, input_norm_scheme)
+print "Output Normalization Scheme: {}, Batch size: {}, Epochs: {}".format(output_norm_scheme, batch_size, num_epochs)
 if not process_all:
     print "# of Samples: {}".format(sample_num)
-print "="*60
+print "=" * 80
 
 # retrieve data
 data = Data_Directories()
@@ -88,23 +95,22 @@ print 'Finished normalizing day0 intervals!'
 # normalize day3 intervals
 normalized_day3_intervals = [normalize_interval(interval, window_size) for interval in day3_intervals if normalize_interval(interval, window_size)]
 print 'Finished normalizing day3 intervals!'
+# TODO: temporary checking for invalid intervals
 for u in normalized_day3_intervals[:]:
     try:
         bw_140bp_day0([u])
     except:
         normalized_day3_intervals.remove(u)
         pass
-print len(normalized_day3_intervals)
 
 # fetch input (day0, ATAC-seq)
 t0 = time.time()
 # raw input shape: (number of samples, window_size, 5)
-# coarse normalized input: (number of samples, window_size, 10)
+# coarse normalized input: (number of samples, window_size, 1)
 inputs = None
-if process_all:
-    inputs = coarse_normalize_input(bw_140bp_day0(normalized_day0_intervals))
-else:
-    inputs = coarse_normalize_input(bw_140bp_day0(normalized_day0_intervals[:sample_num]))
+if not process_all:
+    normalized_day0_intervals = random.sample(normalized_day0_intervals, sample_num)
+inputs = coarse_normalize_input(bw_140bp_day0(normalized_day0_intervals))
 print inputs.shape
 t1 = time.time()
 print 'Time spent for getting signals of intervals for day0 atac-seq: {}'.format(t1-t0)
@@ -112,10 +118,9 @@ print 'Time spent for getting signals of intervals for day0 atac-seq: {}'.format
 #fetch validation inputs (day3, ATAC-seq)
 t2 = time.time()
 val_inputs = None
-if process_all:
-    val_inputs = coarse_normalize_input(bw_140bp_day3(normalized_day3_intervals))
-else:
-    val_inputs = coarse_normalize_input(bw_140bp_day3(normalized_day3_intervals[:sample_num]))
+if not process_all:
+    normalized_day3_intervals = random.sample(normalized_day3_intervals, sample_num)
+val_inputs = coarse_normalize_input(bw_140bp_day3(normalized_day3_intervals))
 print val_inputs.shape
 t3 = time.time()
 print 'Time spent for getting signals of intervals for day3 atac-seq: {}'.format(t3-t2)
@@ -123,10 +128,7 @@ print 'Time spent for getting signals of intervals for day3 atac-seq: {}'.format
 # fetch outputs (day0, histone)
 histone_mark = BigwigExtractor(data.output_histone['day0']['H3K27ac'])
 outputs = None
-if process_all:
-    outputs = histone_mark(normalized_day0_intervals)
-else:
-    outputs = histone_mark(normalized_day0_intervals[:sample_num])
+outputs = histone_mark(normalized_day0_intervals)
 outputs = np.nan_to_num(outputs)
 if output_norm_scheme == 'dl':
     outputs = double_log_transform(outputs)
@@ -139,10 +141,7 @@ print 'Expanded Output Shape: ', outputs[0].shape
 # fetch validation outputs (day3, histone)
 val_histone_mark = BigwigExtractor(data.output_histone['day3']['H3K27ac'])
 val_outputs = None
-if process_all:
-    val_outputs = val_histone_mark(normalized_day3_intervals)
-else:
-    val_outputs = val_histone_mark(normalized_day3_intervals[:sample_num])
+val_outputs = val_histone_mark(normalized_day3_intervals)
 val_outputs = np.nan_to_num(val_outputs)
 if output_norm_scheme == 'dl':
     val_outputs = double_log_transform(val_outputs)
@@ -320,7 +319,6 @@ class Compute_Pearson_Callback(Callback):
             plt.close()
 
 
-num_epochs = 1000000
 print "Fitting the model..."
-model.fit(inputs, outputs, batch_size=64, epochs=num_epochs, callbacks=[Plot_Train_Loss_Callback(), Compute_Pearson_Callback(inputs, outputs, val_inputs, val_outputs)], validation_data=(val_inputs, val_outputs), shuffle=True)
+model.fit(inputs, outputs, batch_size=batch_size, epochs=num_epochs, callbacks=[Plot_Train_Loss_Callback(), Compute_Pearson_Callback(inputs, outputs, val_inputs, val_outputs)], validation_data=(val_inputs, val_outputs), shuffle=True)
 

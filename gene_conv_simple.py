@@ -85,6 +85,13 @@ print 'Finished normalizing day0 intervals!'
 # normalize day3 intervals
 normalized_day3_intervals = [normalize_interval(interval, window_size) for interval in day3_intervals if normalize_interval(interval, window_size)]
 print 'Finished normalizing day3 intervals!'
+for u in normalized_day3_intervals[:]:
+    try:
+        bw_140bp_day0([u])
+    except:
+        normalized_day3_intervals.remove(u)
+        pass
+print len(normalized_day3_intervals)
 
 # fetch input (day0, ATAC-seq)
 t0 = time.time()
@@ -112,7 +119,7 @@ print 'Time spent for getting signals of intervals for day3 atac-seq: {}'.format
 
 # fetch outputs (day0, histone)
 histone_mark = BigwigExtractor(data.output_histone['day0']['H3K27ac'])
-output = None
+outputs = None
 if process_all:
     outputs = histone_mark(normalized_day0_intervals)
 else:
@@ -127,7 +134,7 @@ print 'Expanded Output Shape: ', outputs[0].shape
 val_histone_mark = BigwigExtractor(data.output_histone['day3']['H3K27ac'])
 val_outputs = None
 if process_all:
-    val_outputs = val_histone_mark(normalized_day3_intervals[:sample_num])
+    val_outputs = val_histone_mark(normalized_day3_intervals)
 else:
     val_outputs = val_histone_mark(normalized_day3_intervals[:sample_num])
 val_outputs = np.nan_to_num(val_outputs)

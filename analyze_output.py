@@ -14,6 +14,9 @@ from genomelake.extractors import ArrayExtractor, BigwigExtractor
 from data import Data_Directories
 # pacakge for plotting
 import matplotlib.pyplot as plt
+# custom utility package
+from utils.compute_util import *
+from sklearn.preprocessing import quantile_transform
 
 
 # get flags
@@ -50,44 +53,29 @@ print 'Finished normalizing intervals: {}'.format(len(normalized_intervals))
 histone_mark = BigwigExtractor(data.output_histone['day0']['H3K27ac'])
 outputs = histone_mark(normalized_intervals[:sample_num])
 print 'Output Shape: ', outputs[0].shape
-outputs = outputs.reshape((-1))
+outputs = np.nan_to_num(outputs.reshape((-1)))
+dl_outputs = double_log_transform(outputs)
+q_outputs = quantile_transform(outputs.reshape(-1, 1), n_quantiles=10, random_state=0)
+print "quantile transform shape: {}".format(q_outputs.shape)
 print 'Flattened Shape: ', outputs.shape
 
-print np.argwhere(np.isnan(outputs))
-print "filtering NaN..."
-outputs = filter(lambda v: v==v, outputs)
-print np.argwhere(np.isnan(outputs))
-print "filtering done!"
+print "Original"
 hist, bins = np.histogram(outputs, bin_type)
-print zpi(bins, hist)
-#print "writing before hist"
-print "Making histogram..."
+print zip(bins, hist)
+print "Double Log Transform"
+hist2, bins2 = np.histogram(dl_outputs, bins)
+print zip(bins2, hist2)
+print "Re-bin double log transform"
+hist3, bins3 = np.histogram(dl_outputs, bin_type)
+print zip(bins3, hist3)
+print "Quantile transform"
+hist4, bins4 = np.histogram(q_outputs, bin_type)
+print zip(bins4, hist4)
+
+print "Generating histogram..."
 plt.switch_backend('agg')
 plt.bar(bins[:-1], hist)
-'''
-plt.savefig('analyses/test_before_analysis_'+str(sample_num)+'.png')
-plt.clf()
 
-new_hist, new_bins = [], []
-first = True
-for i, bin in enumerate(bins):
-    if i == len(bins)-1:
-        continue
-    if bin <= 20:
-        new_hist.append(hist[i])
-        new_bins.append(bin)
-    if bin > 20:
-        if first:
-            new_bins.append(bin)
-            new_bins.append(bins[i+1])
-            new_hist.append(hist[i])
-            first = False
-        else:
-            new_hist[-1] += hist[i]
-print '[After] Number of bins: ', len(new_bins)
-print '[After] Number of hist: ', len(new_hist)
-print new_bins
-'''
 #plt.bar(new_bins[:-1], new_hist)
 plt.savefig('analyses/output_analysis_'+str(sample_num)+'.png')
 plt.close()

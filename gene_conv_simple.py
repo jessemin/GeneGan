@@ -9,6 +9,7 @@ import time
 import sys
 import os
 from scipy.stats.stats import pearsonr
+from sklearn.preprocessing import quantile_transform
 import numpy as np
 # package for genomic data
 from pybedtools import Interval, BedTool
@@ -31,9 +32,10 @@ from data import Data_Directories
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('all', False, 'Process all intervals?')
 flags.DEFINE_integer('sample_num', 1000, 'Number of samples', lower_bound=1)
-flags.DEFINE_integer('window_size', 25025, 'Window size', lower_bound=2000)
+flags.DEFINE_integer('window_size', 10001, 'Window size', lower_bound=2000)
 flags.DEFINE_integer('save_freq', 100, 'Frequency for saving models/plots', lower_bound=1)
 flags.DEFINE_string('input_norm_scheme', 'coarse', 'Normalization scheme for inputs')
+flags.DEFINE_string('output_norm_scheme', 'dl', 'Normalization scheme for outputs')
 flags.DEFINE_string('loss', 'mse', 'Type of loss function to use')
 flags.DEFINE_string('output_dir', 'Plots', 'Directory to save the plots')
 flags.DEFINE_string('model_dir', 'Models', 'Directory to save the models')
@@ -43,14 +45,15 @@ FLAGS(sys.argv)
 sample_num = FLAGS.sample_num
 loss_type = FLAGS.loss
 input_norm_scheme = FLAGS.input_norm_scheme
+output_norm_scheme = FLAGS.output_norm_scheme
 window_size = FLAGS.window_size
 save_freq = FLAGS.save_freq
 process_all = FLAGS.all
-output_dir = FLAGS.output_dir
+output_dir = FLAGS.output_dir + "_" + output_norm_scheme
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
     os.makedirs(os.path.join(output_dir, "Pearson"))
-model_dir = FLAGS.model_dir
+model_dir = FLAGS.model_dir + "_" + output_norm_scheme
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 print "Configuration Details"
@@ -125,9 +128,12 @@ if process_all:
 else:
     outputs = histone_mark(normalized_day0_intervals[:sample_num])
 outputs = np.nan_to_num(outputs)
-outputs = double_log_transform(outputs)
-print 'Output Shape (of one sample): ', outputs[0].shape
+if output_norm_scheme == 'dl':
+    outputs = double_log_transform(outputs)
+elif output_norm_scheme == 'quant':
+    outputs = quantile_transform(outputs, n_quantiles=50, random_state=7)
 outputs = np.expand_dims(outputs, axis=2)
+print 'Output Shape (of one sample): ', outputs[0].shape
 print 'Expanded Output Shape: ', outputs[0].shape
 
 # fetch validation outputs (day3, histone)
@@ -138,9 +144,12 @@ if process_all:
 else:
     val_outputs = val_histone_mark(normalized_day3_intervals[:sample_num])
 val_outputs = np.nan_to_num(val_outputs)
-val_outputs = double_log_transform(val_outputs)
-print 'Output Shape (of one sample): ', val_outputs[0].shape
+if output_norm_scheme == 'dl':
+    val_outputs = double_log_transform(val_outputs)
+elif output_norm_scheme == 'quant':
+    val_outputs = quantile_transform(val_outputs, n_quantiles=50, random_state=7)
 val_outputs = np.expand_dims(val_outputs, axis=2)
+print 'Output Shape (of one sample): ', val_outputs[0].shape
 print 'Expanded Output Shape: ', val_outputs[0].shape
 
 '''
@@ -149,10 +158,10 @@ CNN with 6 HIDDEN LAYERS and 1 OUTPUT LAYER
 # build convolutional network with keras
 print "Building Keras sequential model..."
 model = Sequential()
-# 1) build hidden layer with 10 filters of size 500
+# 1) build hidden layer with 30 filters of size 5000
 print "Adding the first hidden layer..."
-hidden_filters_1 = 30
-hidden_kernel_size_1 = 10000
+hidden_filters_1 = 20
+hidden_kernel_size_1 = 5000
 
 model.add(Conv1D(
     filters=hidden_filters_1,
@@ -164,10 +173,10 @@ model.add(Conv1D(
 
 model.add(Dropout(0.1))
 
-# 2) build hidden layer with 7 filters of size 300
+# 2) build hidden layer with 15 filters of size 300
 print "Adding the second hidden layer..."
 hidden_filters_2 = 15
-hidden_kernel_size_2 = 5000
+hidden_kernel_size_2 = 2000
 
 model.add(Conv1D(
     filters=hidden_filters_2,
@@ -180,8 +189,8 @@ model.add(Dropout(0.1))
 
 # 3) building hidden layer with 5 filters of size 200
 print "Adding the third hidden layer..."
-hidden_filters_3 = 15
-hidden_kernel_size_3 = 2000
+hidden_filters_3 = 10
+hidden_kernel_size_3 = 1000
 
 model.add(Conv1D(
     filters=hidden_filters_3,
@@ -195,7 +204,7 @@ model.add(Dropout(0.1))
 # 4) building hidden layer with 5 filters of size 200
 print "Adding the third hidden layer..."
 hidden_filters_4 = 5
-hidden_kernel_size_4 = 500
+hidden_kernel_size_4 = 200
 
 model.add(Conv1D(
     filters=hidden_filters_4,
@@ -209,7 +218,7 @@ model.add(Dropout(0.1))
 # 4) building hidden layer with 5 filters of size 200
 print "Adding the third hidden layer..."
 hidden_filters_5 = 3
-hidden_kernel_size_5 = 100
+hidden_kernel_size_5 = 50
 
 model.add(Conv1D(
     filters=hidden_filters_5,

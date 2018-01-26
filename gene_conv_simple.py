@@ -160,7 +160,7 @@ model = Sequential()
 # 1) build hidden layer with 30 filters of size 5000
 print "Adding the first hidden layer..."
 hidden_filters_1 = 20
-hidden_kernel_size_1 = 5000
+hidden_kernel_size_1 = 3000
 
 model.add(Conv1D(
     filters=hidden_filters_1,
@@ -174,8 +174,8 @@ model.add(Dropout(0.1))
 
 # 2) build hidden layer with 15 filters of size 300
 print "Adding the second hidden layer..."
-hidden_filters_2 = 15
-hidden_kernel_size_2 = 2000
+hidden_filters_2 = 10
+hidden_kernel_size_2 = 700
 
 model.add(Conv1D(
     filters=hidden_filters_2,
@@ -189,7 +189,7 @@ model.add(Dropout(0.1))
 # 3) building hidden layer with 5 filters of size 200
 print "Adding the third hidden layer..."
 hidden_filters_3 = 10
-hidden_kernel_size_3 = 1000
+hidden_kernel_size_3 = 300
 
 model.add(Conv1D(
     filters=hidden_filters_3,
@@ -203,7 +203,7 @@ model.add(Dropout(0.1))
 # 4) building hidden layer with 5 filters of size 200
 print "Adding the third hidden layer..."
 hidden_filters_4 = 5
-hidden_kernel_size_4 = 200
+hidden_kernel_size_4 = 100
 
 model.add(Conv1D(
     filters=hidden_filters_4,
@@ -217,7 +217,7 @@ model.add(Dropout(0.1))
 # 4) building hidden layer with 5 filters of size 200
 print "Adding the third hidden layer..."
 hidden_filters_5 = 3
-hidden_kernel_size_5 = 50
+hidden_kernel_size_5 = 20
 
 model.add(Conv1D(
     filters=hidden_filters_5,
@@ -230,7 +230,7 @@ model.add(Conv1D(
 # NOTE: linear activation for the final layer
 print "Adding a output layer..."
 output_filters = 1
-output_kernel_size = 20
+output_kernel_size = 5
 model.add(Conv1D(filters=output_filters,
     kernel_size=output_kernel_size,
     padding='same',
@@ -288,22 +288,22 @@ class Compute_Pearson_Callback(Callback):
 
     def on_epoch_end(self, batch, logs={}):
         self.epochs += 1
-        x_train, y_train = self.x_train, self.y_train
-        x_val, y_val = self.x_val, self.y_val
-        y_pred_train = self.model.predict(x_train)
-        p_train_list = []
-        for y_t, y_pt in zip(y_train, y_pred_train):
-            p_train_list.append(pearsonr(y_t.squeeze(), y_pt.squeeze()))
-        p_train = np.mean(p_train_list)
-        y_pred_val = self.model.predict(x_val)
-        p_val_list = []
-        for y_v, y_pv in zip(y_val, y_pred_val):
-            p_val_list.append(pearsonr(y_v.squeeze(), y_pv.squeeze()))
-        p_val = np.mean(p_val_list)
-        print "Train Pearson Corr: {}, Valid Pearson Corr: {}".format(p_train, p_val)
-        self.p_train_history.append(p_train)
-        self.p_val_history.append(p_val)
         if self.epochs % save_freq == 0:
+            x_train, y_train = self.x_train, self.y_train
+            x_val, y_val = self.x_val, self.y_val
+            y_pred_train = self.model.predict(x_train)
+            p_train_list = []
+            for y_t, y_pt in zip(y_train, y_pred_train):
+                p_train_list.append(pearsonr(y_t.squeeze(), y_pt.squeeze()))
+            p_train = np.mean(p_train_list)
+            y_pred_val = self.model.predict(x_val)
+            p_val_list = []
+            for y_v, y_pv in zip(y_val, y_pred_val):
+                p_val_list.append(pearsonr(y_v.squeeze(), y_pv.squeeze()))
+            p_val = np.mean(p_val_list)
+            print "Train Pearson Corr: {}, Valid Pearson Corr: {}".format(p_train, p_val)
+            self.p_train_history.append(p_train)
+            self.p_val_history.append(p_val)
             # record pearson correlation for train
             plt.plot(range(self.epochs), self.p_train_history)
             plt.title('Pearson Correlation - Train')

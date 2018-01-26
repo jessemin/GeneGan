@@ -288,7 +288,7 @@ class Compute_Pearson_Callback(Callback):
 
     def on_epoch_end(self, batch, logs={}):
         self.epochs += 1
-        if self.epochs % save_freq == 0:
+        if self.epochs % 10 == 0:
             x_train, y_train = self.x_train, self.y_train
             x_val, y_val = self.x_val, self.y_val
             y_pred_train = self.model.predict(x_train)

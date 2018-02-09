@@ -159,8 +159,8 @@ print "Building Keras sequential model..."
 model = Sequential()
 # 1) build hidden layer with 30 filters of size 5000
 print "Adding the first hidden layer..."
-hidden_filters_1 = 20
-hidden_kernel_size_1 = 3000
+hidden_filters_1 = 51
+hidden_kernel_size_1 = 1001
 
 model.add(Conv1D(
     filters=hidden_filters_1,
@@ -170,74 +170,12 @@ model.add(Conv1D(
     strides=1,
     input_shape=(window_size, 1)))
 
-model.add(Dropout(0.1))
-
-# 2) build hidden layer with 15 filters of size 300
-print "Adding the second hidden layer..."
-hidden_filters_2 = 10
-hidden_kernel_size_2 = 700
-
 model.add(Conv1D(
-    filters=hidden_filters_2,
-    kernel_size=hidden_kernel_size_2,
+    filters=1,
+    kernel_size=window_size,
     padding='same',
-    activation='relu',
+    activation='sigmoid',
     strides=1))
-
-model.add(Dropout(0.1))
-
-# 3) building hidden layer with 5 filters of size 200
-print "Adding the third hidden layer..."
-hidden_filters_3 = 10
-hidden_kernel_size_3 = 300
-
-model.add(Conv1D(
-    filters=hidden_filters_3,
-    kernel_size=hidden_kernel_size_3,
-    padding='same',
-    activation='relu',
-    strides=1))
-
-model.add(Dropout(0.1))
-
-# 4) building hidden layer with 5 filters of size 200
-print "Adding the third hidden layer..."
-hidden_filters_4 = 5
-hidden_kernel_size_4 = 100
-
-model.add(Conv1D(
-    filters=hidden_filters_4,
-    kernel_size=hidden_kernel_size_4,
-    padding='same',
-    activation='relu',
-    strides=1))
-
-model.add(Dropout(0.1))
-
-# 4) building hidden layer with 5 filters of size 200
-print "Adding the third hidden layer..."
-hidden_filters_5 = 3
-hidden_kernel_size_5 = 20
-
-model.add(Conv1D(
-    filters=hidden_filters_5,
-    kernel_size=hidden_kernel_size_5,
-    padding='same',
-    activation='relu',
-    strides=1))
-
-# 5) build output layer with 1 filter of size 20
-# NOTE: linear activation for the final layer
-print "Adding a output layer..."
-output_filters = 1
-output_kernel_size = 5
-model.add(Conv1D(filters=output_filters,
-    kernel_size=output_kernel_size,
-    padding='same',
-    activation='relu',
-    strides=1
-    ))
-
 
 # setting optimizer
 adam = optimizers.Adam(clipnorm=1.)

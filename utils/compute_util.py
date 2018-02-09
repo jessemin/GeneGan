@@ -16,6 +16,7 @@ def coarse_normalize_input(atac_seq):
 
 
 # normalizes intervals to window-sized bp bins with summit at center
+# non_inclusive
 def normalize_interval(interval, window_size):
     normalized_interval = copy.deepcopy(interval)
     summit = int(interval.start) + int(interval[-1])

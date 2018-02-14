@@ -712,3 +712,570 @@ I tensorflow/core/common_runtime/gpu/pool_allocator.cc:247] PoolAllocator: After
 [W 11:19:39.517 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20180208102220 (::1) 4.18ms referer=http://localhost:2555/notebooks/notebooks/baseline.ipynb
 [I 11:19:40.321 NotebookApp] Adapting to protocol v5.1 for kernel 58447989-1289-4db0-8508-c731ee96f118
 [I 11:19:45.426 NotebookApp] Kernel shutdown: 58447989-1289-4db0-8508-c731ee96f118
+[I 00:31:38.885 NotebookApp] 302 GET / (::1) 38.78ms
+[W 00:32:13.851 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20180208102220 (::1) 10.68ms referer=http://localhost:2555/notebooks/notebooks/baseline.ipynb
+[I 00:32:14.598 NotebookApp] Kernel started: d7643f42-44cf-4ff6-92ab-aeaf75c13a25
+[I 00:32:18.012 NotebookApp] Adapting to protocol v5.1 for kernel d7643f42-44cf-4ff6-92ab-aeaf75c13a25
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcublas.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcudnn.so.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcufft.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcuda.so.1 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcurand.so.7.5 locally
+[I 00:34:14.559 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:34:21.977 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:34:22.266 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:34:29.128 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:34:46.390 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:36:17.188 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:38:14.872 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:40:36.211 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:41:20.872 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:41:21.329 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:41:28.938 NotebookApp] Kernel shutdown: d7643f42-44cf-4ff6-92ab-aeaf75c13a25
+[I 00:41:30.608 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:41:32.869 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:41:33.210 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[W 00:41:34.582 NotebookApp] Session not found: session_id=u'be123ffd-a679-4a71-bdab-4606aa809d2b'
+[W 00:41:34.583 NotebookApp] 404 DELETE /api/sessions/be123ffd-a679-4a71-bdab-4606aa809d2b (::1) 5.32ms referer=http://localhost:2555/notebooks/notebooks/baseline.ipynb
+[W 00:41:38.451 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20180208102220 (::1) 3.59ms referer=http://localhost:2555/notebooks/notebooks/baseline.ipynb
+[I 00:41:38.988 NotebookApp] Kernel started: f21d4709-b3d9-4308-b7e5-7618360da639
+[I 00:41:40.145 NotebookApp] Adapting to protocol v5.1 for kernel f21d4709-b3d9-4308-b7e5-7618360da639
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcublas.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcudnn.so.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcufft.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcuda.so.1 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcurand.so.7.5 locally
+[I 00:43:39.142 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:45:39.287 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:47:39.281 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:49:39.297 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:51:39.294 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:53:39.291 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:55:39.337 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 00:57:39.261 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:01:38.982 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:02:05.179 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:13:39.208 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:14:17.488 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:15:19.877 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:17:39.443 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:19:34.461 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:19:39.053 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:20:18.879 NotebookApp] Saving file at /notebooks/baseline.ipynb
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 0 with properties: 
+name: GeForce GTX TITAN X
+major: 5 minor: 2 memoryClockRate (GHz) 1.076
+pciBusID 0000:88:00.0
+Total memory: 11.92GiB
+Free memory: 11.81GiB
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:906] DMA: 0 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 0:   Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX TITAN X, pci bus id: 0000:88:00.0)
+I tensorflow/core/common_runtime/gpu/pool_allocator.cc:247] PoolAllocator: After 5385 get requests, put_count=5363 evicted_count=1000 eviction_rate=0.186463 and unsatisfied allocation rate=0.208357
+I tensorflow/core/common_runtime/gpu/pool_allocator.cc:259] Raising pool_size_limit_ from 100 to 110
+[I 01:21:41.069 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:22:27.557 NotebookApp] Kernel interrupted: f21d4709-b3d9-4308-b7e5-7618360da639
+[I 01:22:35.888 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:23:05.810 NotebookApp] Kernel interrupted: f21d4709-b3d9-4308-b7e5-7618360da639
+[I 01:23:39.230 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:25:38.960 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:25:55.318 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:27:39.843 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:28:57.887 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:29:40.367 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:33:15.390 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:33:39.250 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:35:02.346 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:35:39.313 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:37:39.177 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:39:54.301 NotebookApp] 302 GET / (::1) 0.74ms
+[I 01:41:39.081 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:43:14.015 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:43:41.151 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:45:38.959 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:46:00.294 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:47:38.869 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:51:38.929 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:51:49.677 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:53:25.846 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:53:29.646 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:53:39.193 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:55:39.529 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:56:42.854 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:57:38.935 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:57:52.168 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:59:04.424 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:59:18.250 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:59:18.532 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:59:40.535 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:59:42.442 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 01:59:43.405 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:01:32.263 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:01:36.340 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:01:36.424 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:01:38.825 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:01:49.875 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:02:44.177 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:03:39.120 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:04:00.509 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:04:00.728 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:04:03.652 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:04:41.414 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:04:42.971 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:05:03.593 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:05:38.867 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:06:07.092 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:06:07.361 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:06:11.618 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:06:11.960 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:06:23.337 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:06:27.284 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:15:05.924 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:15:07.642 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:15:12.729 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:15:38.812 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:15:44.670 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:15:45.106 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:15:45.352 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:15:46.881 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:15:47.078 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:15:47.416 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:15:47.968 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:15:48.263 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:15:48.665 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:16:15.964 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:16:27.800 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:16:40.056 NotebookApp] Kernel interrupted: f21d4709-b3d9-4308-b7e5-7618360da639
+[I 02:16:43.549 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:17:38.788 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:17:53.992 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:17:54.232 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:18:12.822 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:18:13.279 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:18:21.464 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:19:18.082 NotebookApp] Kernel interrupted: f21d4709-b3d9-4308-b7e5-7618360da639
+[I 02:19:38.785 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:21:39.070 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:22:50.598 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:22:52.474 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:23:38.800 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:25:39.166 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:26:21.664 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:27:39.234 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:29:38.785 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:31:39.050 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:33:39.130 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:34:16.891 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:34:28.331 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:34:28.741 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:34:29.234 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:34:48.846 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:35:00.711 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:35:03.172 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:35:38.805 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:35:48.497 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:36:20.686 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:37:39.035 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:39:13.687 NotebookApp] Kernel interrupted: f21d4709-b3d9-4308-b7e5-7618360da639
+[I 02:39:39.028 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:41:38.734 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:42:29.889 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:42:30.156 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:42:38.779 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:42:39.145 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:42:39.464 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:42:39.839 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:42:43.673 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:42:43.990 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:43:07.876 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:43:38.729 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:45:38.736 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:45:43.301 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:45:43.712 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:45:44.180 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:45:44.459 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:45:46.651 NotebookApp] Kernel interrupted: f21d4709-b3d9-4308-b7e5-7618360da639
+[I 02:47:38.725 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:48:26.172 NotebookApp] Kernel interrupted: f21d4709-b3d9-4308-b7e5-7618360da639
+[I 02:48:36.001 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:48:42.416 NotebookApp] Kernel shutdown: f21d4709-b3d9-4308-b7e5-7618360da639
+[W 02:48:49.975 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20180208102220 (::1) 3.05ms referer=http://localhost:2555/notebooks/notebooks/baseline.ipynb
+[I 02:48:50.693 NotebookApp] Kernel started: f9f9bfee-cf76-4c8a-80fe-c98f50fb0acf
+[I 02:48:51.853 NotebookApp] Adapting to protocol v5.1 for kernel f9f9bfee-cf76-4c8a-80fe-c98f50fb0acf
+[I 02:48:58.057 NotebookApp] Kernel restarted: f9f9bfee-cf76-4c8a-80fe-c98f50fb0acf
+[W 02:48:58.065 NotebookApp] zmq message arrived on closed channel
+[I 02:48:59.032 NotebookApp] Adapting to protocol v5.1 for kernel f9f9bfee-cf76-4c8a-80fe-c98f50fb0acf
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcublas.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcudnn.so.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcufft.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcuda.so.1 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcurand.so.7.5 locally
+[I 02:50:50.770 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:52:51.006 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 02:54:51.117 NotebookApp] Saving file at /notebooks/baseline.ipynb
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 0 with properties: 
+name: GeForce GTX TITAN X
+major: 5 minor: 2 memoryClockRate (GHz) 1.076
+pciBusID 0000:83:00.0
+Total memory: 11.92GiB
+Free memory: 11.81GiB
+W tensorflow/stream_executor/cuda/cuda_driver.cc:590] creating context when one is currently active; existing: 0x2dd02570
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 1 with properties: 
+name: GeForce GTX TITAN X
+major: 5 minor: 2 memoryClockRate (GHz) 1.076
+pciBusID 0000:88:00.0
+Total memory: 11.92GiB
+Free memory: 11.81GiB
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:906] DMA: 0 1 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 0:   Y Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 1:   Y Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX TITAN X, pci bus id: 0000:83:00.0)
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:1) -> (device: 1, name: GeForce GTX TITAN X, pci bus id: 0000:88:00.0)
+I tensorflow/core/common_runtime/gpu/pool_allocator.cc:247] PoolAllocator: After 5074 get requests, put_count=5043 evicted_count=1000 eviction_rate=0.198295 and unsatisfied allocation rate=0.222901
+I tensorflow/core/common_runtime/gpu/pool_allocator.cc:259] Raising pool_size_limit_ from 100 to 110
+[I 02:56:51.085 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:17:02.477 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:17:59.313 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:17:59.521 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:18:00.252 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:18:50.748 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:20:09.721 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:20:12.144 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:20:12.358 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:20:21.074 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:20:22.624 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:20:51.716 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:22:00.193 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:22:04.851 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:22:09.026 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:22:13.563 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:22:13.776 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:22:18.879 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:22:19.272 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:22:23.464 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:22:50.978 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:24:47.845 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:24:48.353 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:24:48.467 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:24:48.693 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:29:09.025 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:29:09.474 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:29:09.675 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:30:26.435 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:30:26.773 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:30:27.046 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:30:33.904 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:30:34.368 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:30:36.054 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:30:36.342 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:30:36.939 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:30:41.224 NotebookApp] Kernel shutdown: f9f9bfee-cf76-4c8a-80fe-c98f50fb0acf
+[I 03:31:02.322 NotebookApp] 302 GET / (::1) 0.45ms
+[W 03:31:13.912 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20180208102220 (::1) 2.15ms referer=http://localhost:2555/notebooks/notebooks/baseline.ipynb
+[I 03:31:14.899 NotebookApp] Kernel started: 9526866e-0872-4c5d-875e-7184e2de315f
+[I 03:31:15.880 NotebookApp] Adapting to protocol v5.1 for kernel 9526866e-0872-4c5d-875e-7184e2de315f
+[I 03:31:21.223 NotebookApp] Kernel restarted: 9526866e-0872-4c5d-875e-7184e2de315f
+[I 03:31:22.212 NotebookApp] Adapting to protocol v5.1 for kernel 9526866e-0872-4c5d-875e-7184e2de315f
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcublas.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcudnn.so.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcufft.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcuda.so.1 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcurand.so.7.5 locally
+[I 03:33:14.917 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:35:19.637 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:37:14.975 NotebookApp] Saving file at /notebooks/baseline.ipynb
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 0 with properties: 
+name: GeForce GTX TITAN X
+major: 5 minor: 2 memoryClockRate (GHz) 1.076
+pciBusID 0000:83:00.0
+Total memory: 11.92GiB
+Free memory: 11.81GiB
+W tensorflow/stream_executor/cuda/cuda_driver.cc:590] creating context when one is currently active; existing: 0x2f79b0e0
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 1 with properties: 
+name: GeForce GTX TITAN X
+major: 5 minor: 2 memoryClockRate (GHz) 1.076
+pciBusID 0000:88:00.0
+Total memory: 11.92GiB
+Free memory: 11.81GiB
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:906] DMA: 0 1 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 0:   Y Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 1:   Y Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX TITAN X, pci bus id: 0000:83:00.0)
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:1) -> (device: 1, name: GeForce GTX TITAN X, pci bus id: 0000:88:00.0)
+I tensorflow/core/common_runtime/gpu/pool_allocator.cc:247] PoolAllocator: After 5074 get requests, put_count=5043 evicted_count=1000 eviction_rate=0.198295 and unsatisfied allocation rate=0.222901
+I tensorflow/core/common_runtime/gpu/pool_allocator.cc:259] Raising pool_size_limit_ from 100 to 110
+[I 03:39:16.496 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:41:16.493 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 03:47:53.167 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[W 04:06:30.969 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20180208102220 (::1) 2.46ms referer=http://localhost:2555/notebooks/notebooks/baseline.ipynb
+[I 04:06:31.990 NotebookApp] Adapting to protocol v5.1 for kernel 9526866e-0872-4c5d-875e-7184e2de315f
+[I 04:06:54.614 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:06:56.290 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:06:57.626 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:06:58.654 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:06:58.976 NotebookApp] Saving file at /notebooks/baseline.ipynb
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "/users/jesikmin/anaconda2/envs/genomelake_env/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/users/jesikmin/anaconda2/envs/genomelake_env/lib/python2.7/site-packages/ipykernel/parentpoller.py", line 36, in run
+    if os.getppid() == 1:
+AttributeError: 'NoneType' object has no attribute 'getppid'
+
+[I 04:07:15.766 NotebookApp] Kernel restarted: 9526866e-0872-4c5d-875e-7184e2de315f
+[I 04:07:16.863 NotebookApp] Adapting to protocol v5.1 for kernel 9526866e-0872-4c5d-875e-7184e2de315f
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcublas.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcudnn.so.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcufft.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcuda.so.1 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcurand.so.7.5 locally
+[I 04:07:34.113 NotebookApp] Kernel interrupted: 9526866e-0872-4c5d-875e-7184e2de315f
+[I 04:07:41.368 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:07:41.607 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:07:49.190 NotebookApp] Kernel restarted: 9526866e-0872-4c5d-875e-7184e2de315f
+[I 04:07:50.416 NotebookApp] Adapting to protocol v5.1 for kernel 9526866e-0872-4c5d-875e-7184e2de315f
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcublas.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcudnn.so.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcufft.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcuda.so.1 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcurand.so.7.5 locally
+[I 04:08:31.861 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:10:31.845 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:12:31.947 NotebookApp] Saving file at /notebooks/baseline.ipynb
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 0 with properties: 
+name: GeForce GTX TITAN X
+major: 5 minor: 2 memoryClockRate (GHz) 1.076
+pciBusID 0000:83:00.0
+Total memory: 11.92GiB
+Free memory: 11.81GiB
+W tensorflow/stream_executor/cuda/cuda_driver.cc:590] creating context when one is currently active; existing: 0x2f8f1a70
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 1 with properties: 
+name: GeForce GTX TITAN X
+major: 5 minor: 2 memoryClockRate (GHz) 1.076
+pciBusID 0000:88:00.0
+Total memory: 11.92GiB
+Free memory: 11.81GiB
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:906] DMA: 0 1 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 0:   Y Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 1:   Y Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX TITAN X, pci bus id: 0000:83:00.0)
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:1) -> (device: 1, name: GeForce GTX TITAN X, pci bus id: 0000:88:00.0)
+I tensorflow/core/common_runtime/gpu/pool_allocator.cc:247] PoolAllocator: After 5074 get requests, put_count=5043 evicted_count=1000 eviction_rate=0.198295 and unsatisfied allocation rate=0.222901
+I tensorflow/core/common_runtime/gpu/pool_allocator.cc:259] Raising pool_size_limit_ from 100 to 110
+[I 04:14:31.842 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:16:31.847 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:18:31.853 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:19:06.562 NotebookApp] Kernel interrupted: 9526866e-0872-4c5d-875e-7184e2de315f
+[I 04:19:14.708 NotebookApp] Kernel shutdown: 9526866e-0872-4c5d-875e-7184e2de315f
+[W 04:19:14.712 NotebookApp] zmq message arrived on closed channel
+[W 04:19:55.354 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20180208102220 (::1) 2.77ms referer=http://localhost:2555/notebooks/notebooks/baseline.ipynb
+[I 04:19:56.018 NotebookApp] Kernel started: a4fd5dc3-f20b-428f-b031-02f007dc8885
+[I 04:19:56.964 NotebookApp] Adapting to protocol v5.1 for kernel a4fd5dc3-f20b-428f-b031-02f007dc8885
+[I 04:20:12.910 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:20:13.960 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:20:16.501 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:20:23.365 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:20:23.580 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:20:52.010 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:20:54.542 NotebookApp] Kernel restarted: a4fd5dc3-f20b-428f-b031-02f007dc8885
+[W 04:20:54.553 NotebookApp] zmq message arrived on closed channel
+[I 04:20:55.723 NotebookApp] Adapting to protocol v5.1 for kernel a4fd5dc3-f20b-428f-b031-02f007dc8885
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcublas.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcudnn.so.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcufft.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcuda.so.1 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcurand.so.7.5 locally
+[I 04:21:56.032 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:23:56.826 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:25:56.023 NotebookApp] Saving file at /notebooks/baseline.ipynb
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 0 with properties: 
+name: GeForce GTX TITAN X
+major: 5 minor: 2 memoryClockRate (GHz) 1.076
+pciBusID 0000:83:00.0
+Total memory: 11.92GiB
+Free memory: 11.81GiB
+W tensorflow/stream_executor/cuda/cuda_driver.cc:590] creating context when one is currently active; existing: 0x2e08c570
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 1 with properties: 
+name: GeForce GTX TITAN X
+major: 5 minor: 2 memoryClockRate (GHz) 1.076
+pciBusID 0000:88:00.0
+Total memory: 11.92GiB
+Free memory: 11.81GiB
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:906] DMA: 0 1 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 0:   Y Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 1:   Y Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX TITAN X, pci bus id: 0000:83:00.0)
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:1) -> (device: 1, name: GeForce GTX TITAN X, pci bus id: 0000:88:00.0)
+I tensorflow/core/common_runtime/gpu/pool_allocator.cc:247] PoolAllocator: After 5074 get requests, put_count=5043 evicted_count=1000 eviction_rate=0.198295 and unsatisfied allocation rate=0.222901
+I tensorflow/core/common_runtime/gpu/pool_allocator.cc:259] Raising pool_size_limit_ from 100 to 110
+[I 04:27:56.808 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:29:56.938 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:31:56.797 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:33:56.878 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:35:56.782 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:37:56.780 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:39:56.844 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:42:30.006 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:43:59.647 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:44:03.557 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:44:14.101 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:44:44.989 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:44:49.348 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:44:49.616 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:44:49.858 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:44:55.875 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:44:56.141 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:45:55.980 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:45:57.430 NotebookApp] Kernel interrupted: a4fd5dc3-f20b-428f-b031-02f007dc8885
+[I 04:47:01.661 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:47:02.001 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:47:55.932 NotebookApp] Kernel interrupted: a4fd5dc3-f20b-428f-b031-02f007dc8885
+[I 04:47:55.985 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:47:58.555 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:48:24.257 NotebookApp] Kernel interrupted: a4fd5dc3-f20b-428f-b031-02f007dc8885
+[I 04:48:42.742 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:48:46.741 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:48:58.364 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:49:55.970 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:50:36.704 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:50:46.095 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:50:52.689 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:50:54.304 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:51:55.967 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:53:55.962 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:54:11.411 NotebookApp] Kernel interrupted: a4fd5dc3-f20b-428f-b031-02f007dc8885
+[I 04:54:25.209 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:54:34.936 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:54:35.115 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:54:35.301 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:54:39.499 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:54:44.869 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:54:46.368 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:54:50.674 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:54:52.848 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:54:53.046 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:54:53.239 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:55:55.975 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:57:29.734 NotebookApp] Kernel interrupted: a4fd5dc3-f20b-428f-b031-02f007dc8885
+[I 04:57:48.034 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:57:55.951 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 04:58:40.599 NotebookApp] Kernel shutdown: a4fd5dc3-f20b-428f-b031-02f007dc8885
+[W 04:58:46.979 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20180208102220 (::1) 3.06ms referer=http://localhost:2555/notebooks/notebooks/baseline.ipynb
+[I 04:58:47.634 NotebookApp] Kernel started: 7ef90999-1815-4efe-b0e7-9796a078d71d
+[I 04:58:48.826 NotebookApp] Adapting to protocol v5.1 for kernel 7ef90999-1815-4efe-b0e7-9796a078d71d
+[I 04:58:55.562 NotebookApp] Kernel restarted: 7ef90999-1815-4efe-b0e7-9796a078d71d
+[I 04:58:56.589 NotebookApp] Adapting to protocol v5.1 for kernel 7ef90999-1815-4efe-b0e7-9796a078d71d
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcublas.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcudnn.so.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcufft.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcuda.so.1 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcurand.so.7.5 locally
+[I 05:00:47.645 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:02:47.731 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:04:47.721 NotebookApp] Saving file at /notebooks/baseline.ipynb
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 0 with properties: 
+name: GeForce GTX TITAN X
+major: 5 minor: 2 memoryClockRate (GHz) 1.076
+pciBusID 0000:83:00.0
+Total memory: 11.92GiB
+Free memory: 11.81GiB
+W tensorflow/stream_executor/cuda/cuda_driver.cc:590] creating context when one is currently active; existing: 0x2dcebba0
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 1 with properties: 
+name: GeForce GTX TITAN X
+major: 5 minor: 2 memoryClockRate (GHz) 1.076
+pciBusID 0000:88:00.0
+Total memory: 11.92GiB
+Free memory: 11.81GiB
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:906] DMA: 0 1 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 0:   Y Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 1:   Y Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX TITAN X, pci bus id: 0000:83:00.0)
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:1) -> (device: 1, name: GeForce GTX TITAN X, pci bus id: 0000:88:00.0)
+I tensorflow/core/common_runtime/gpu/pool_allocator.cc:247] PoolAllocator: After 5074 get requests, put_count=5043 evicted_count=1000 eviction_rate=0.198295 and unsatisfied allocation rate=0.222901
+I tensorflow/core/common_runtime/gpu/pool_allocator.cc:259] Raising pool_size_limit_ from 100 to 110
+[I 05:06:47.926 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:08:14.852 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:08:15.103 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:08:15.269 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:08:24.477 NotebookApp] Kernel shutdown: 7ef90999-1815-4efe-b0e7-9796a078d71d
+[W 05:08:43.467 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20180208102220 (::1) 2.86ms referer=http://localhost:2555/notebooks/notebooks/baseline.ipynb
+[I 05:08:44.131 NotebookApp] Kernel started: 9b878130-2db7-4159-9fa0-e0a745f3bc93
+[I 05:08:45.248 NotebookApp] Adapting to protocol v5.1 for kernel 9b878130-2db7-4159-9fa0-e0a745f3bc93
+[I 05:08:47.381 NotebookApp] Kernel restarted: 9b878130-2db7-4159-9fa0-e0a745f3bc93
+[I 05:08:48.379 NotebookApp] Adapting to protocol v5.1 for kernel 9b878130-2db7-4159-9fa0-e0a745f3bc93
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcublas.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcudnn.so.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcufft.so.7.5 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcuda.so.1 locally
+I tensorflow/stream_executor/dso_loader.cc:135] successfully opened CUDA library libcurand.so.7.5 locally
+[I 05:10:44.715 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:12:44.146 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:14:44.798 NotebookApp] Saving file at /notebooks/baseline.ipynb
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 0 with properties: 
+name: GeForce GTX TITAN X
+major: 5 minor: 2 memoryClockRate (GHz) 1.076
+pciBusID 0000:83:00.0
+Total memory: 11.92GiB
+Free memory: 11.81GiB
+W tensorflow/stream_executor/cuda/cuda_driver.cc:590] creating context when one is currently active; existing: 0x2f8a3010
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 1 with properties: 
+name: GeForce GTX TITAN X
+major: 5 minor: 2 memoryClockRate (GHz) 1.076
+pciBusID 0000:88:00.0
+Total memory: 11.92GiB
+Free memory: 11.81GiB
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:906] DMA: 0 1 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 0:   Y Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 1:   Y Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX TITAN X, pci bus id: 0000:83:00.0)
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:1) -> (device: 1, name: GeForce GTX TITAN X, pci bus id: 0000:88:00.0)
+I tensorflow/core/common_runtime/gpu/pool_allocator.cc:247] PoolAllocator: After 5074 get requests, put_count=5043 evicted_count=1000 eviction_rate=0.198295 and unsatisfied allocation rate=0.222901
+I tensorflow/core/common_runtime/gpu/pool_allocator.cc:259] Raising pool_size_limit_ from 100 to 110
+[I 05:16:44.697 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:18:44.707 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:20:44.703 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:22:44.711 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:24:44.683 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:26:44.117 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:28:44.751 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:30:44.681 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:32:44.661 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:34:44.109 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:34:48.818 NotebookApp] Kernel interrupted: 9b878130-2db7-4159-9fa0-e0a745f3bc93
+[I 05:36:27.499 NotebookApp] Saving file at /notebooks/baseline.ipynb
+[I 05:36:32.591 NotebookApp] Saving file at /notebooks/baseline.ipynb

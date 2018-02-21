@@ -1,3 +1,7 @@
+logs/
+models/
+pickles
+
 *.pyc
 model_*
 *.png

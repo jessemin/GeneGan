@@ -26,6 +26,13 @@ import argparse
 parser = argparse.ArgumentParser()
 
 # Setup Arguments
+parser.add_argument('-e',
+                    '--num_epochs',
+                    required=False,
+                    type=int,
+                    default=300,
+                    dest="num_epochs",
+                    help="Number of epochs for training")
 parser.add_argument('-w',
                     '--window_size',
                     required=False,
@@ -61,20 +68,13 @@ parser.add_argument('-m',
                     default='',
                     dest="model_path",
                     help="Path to pre-trained model")
-parser.add_argument('-save_m',
-                    '--model_dir',
-                    required=False,
-                    type=str,
-                    default='test',
-                    dest="model_dir",
-                    help="Where to save the best model")
-parser.add_argument('-save_srv',
+parser.add_argument('-save',
                     '--save_dir',
                     required=False,
                     type=str,
                     default='test',
-                    dest="srv_dir",
-                    help="Where to save the predictions of the best model")
+                    dest="save_dir",
+                    help="Where to save the best model, logs, and its predictions")
 parser.add_argument('-s',
                     '--smooth_rate',
                     required=False,
@@ -106,23 +106,26 @@ parser.add_argument('-cuda',
 args = parser.parse_args()
 
 # Parse all arguments
+
 window_size = args.window_size
 day = args.day
 frag = args.frag
 histone = args.histone
 model_path = args.model_path
-_model_dir = args.model_dir
-_srv_dir = args.srv_dir
+save_dir = args.save_dir
 sample_num = args.sample_num
 cuda = args.cuda
 
 os.environ["CUDA_VISIBLE_DEVICES"]=cuda
 
 # Logging directories
-model_dir = os.path.join("models", _model_dir)
-srv_dir = os.path.join("/srv", "www", "kundaje", "jesikmin", "experiments", _srv_dir)
+model_dir = os.path.join("models", save_dir)
+log_dir = os.path.join("logs", save_dir)
+srv_dir = os.path.join("/srv", "www", "kundaje", "jesikmin", "experiments", save_dir)
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
 if not os.path.exists(srv_dir):
     os.makedirs(srv_dir)
 
@@ -266,8 +269,7 @@ output_filters = 1
 output_kernel_size = 32
 # Training
 batch_size = 128
-num_epochs = 200
-evaluation_freq = 10
+num_epochs = args.num_epochs
 
 
 # Helper functions for writing the scores into bigwig file
@@ -496,6 +498,8 @@ class GAN():
         return Model(img, validity)
 
     def train(self, epochs, batch_size):
+        d_loss_history, g_loss_history = [], []
+        pearson_train_history, pearson_val_history = [], []
 
         max_pearson = -1.0
 
@@ -581,14 +585,14 @@ class GAN():
             # Get generator's prediction and compute overall pearson on train set
             # ---------------------
             predictions = self.generator.predict(self.X_train).flatten()
-            avg_pearson = pearsonr(predictions, self.y_train.flatten())
+            avg_pearson = pearsonr(predictions, self.y_train.flatten())[0]
             print "Pearson R on Train set: {}".format(avg_pearson)
 
             # ---------------------
             # Get generator's prediction and compute overall pearson on validation set
             # ---------------------
             val_predictions = self.generator.predict(self.X_val).flatten()
-            avg_val_pearson = pearsonr(val_predictions, self.y_val.flatten())
+            avg_val_pearson = pearsonr(val_predictions, self.y_val.flatten())[0]
             print "Pearson R on Val set: {}".format(avg_val_pearson)
 
             # if current pearson on validation set is greatest so far, update the max pearson,
@@ -617,10 +621,23 @@ class GAN():
                 self.generator.save(os.path.join(self.model_dir, 'best_generator.h5'))
                 self.discriminator.save(os.path.join(self.model_dir, 'best_discriminator.h5'))
 
+            # Save the progress
+            d_loss_history.append(d_losses.mean())
+            g_loss_history.append(g_losses.mean())
+            pearson_train_history.append(avg_pearson)
+            pearson_val_history.append(avg_val_pearson)
+
             # Print the progress
             print ("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_losses.mean(), 100.0*d_accuracies.mean(), g_losses.mean()))
 
+        assert (len(d_loss_history) == len(g_loss_history) == len(pearson_train_history) == len(pearson_val_history))
 
+        print "Saving the loss and pearson logs..."
+        np.save(os.path.join(log_dir, 'd_loss_history.npy'), d_loss_history)
+        np.save(os.path.join(log_dir, 'g_loss_history.npy'), g_loss_history)
+        np.save(os.path.join(log_dir, 'pearson_train_history.npy'), pearson_train_history)
+        np.save(os.path.join(log_dir, 'pearson_val_history.npy'), pearson_val_history)
+        print "Train Complete!"
 
 
 # Helper function for computing Pearson R in Keras
@@ -635,9 +652,6 @@ def pearson(y_true, y_pred):
     r = r_num / r_den
     r = K.maximum(K.minimum(r, 1.0), -1.0)
     return K.square(r)
-
-
-# In[28]:
 
 
 print "Training the model..."

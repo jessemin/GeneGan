@@ -317,8 +317,7 @@ def merged_scores(scores, intervals, merge_type):
             for idx, interval in idx_interval_pairs:
                 slice_start = interval.start - group_start
                 slice_stop = slice_start + (interval.stop - interval.start)
-                group_score[..., slice_start:slice_stop] =                     np.maximum(group_score[..., slice_start:slice_stop],
-                               scores[idx, ...])
+                group_score[..., slice_start:slice_stop] = np.maximum(group_score[..., slice_start:slice_stop], scores[idx, ...])
             if signal_dims == 1:
                 group_score = group_score.squeeze(axis=0)
             yield Interval(group_chrom, group_start, group_stop), group_score
@@ -395,7 +394,7 @@ class GAN():
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
-        self.discriminator.compile(loss='binary_crossentropy', 
+        self.discriminator.compile(loss='binary_crossentropy',
                                    optimizer=doptimizer,
                                    metrics=['accuracy'])
 
@@ -612,7 +611,7 @@ class GAN():
                 print "Pearson R on Test set: {}".format(avg_test_pearson)
                 f.write("Test Pearson: " + str(avg_test_pearson))
                 f.close()
-                _write_1D_deeplift_track(val_predictions.reshape(self.X_test.shape[0], self.window_size),
+                _write_1D_deeplift_track(test_predictions.reshape(self.X_test.shape[0], self.window_size),
                                          normalized_test_intervals, os.path.join(self.srv_dir, 'test'))
 
                 self.generator.save(os.path.join(self.model_dir, 'best_generator.h5'))

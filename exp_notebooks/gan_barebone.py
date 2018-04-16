@@ -174,8 +174,8 @@ normalized_val_intervals = normalized_val_intervals[:int(sample_num*0.2)]
 print 'Finished fethcing {} train set and {} val set'.format(sample_num, int(sample_num*0.2))
 
 # Assertions of normalization step
-assert (len(train_intervals)==len(normalized_train_intervals))
-assert (len(val_intervals)==len(normalized_val_intervals))
+assert (sample_num==len(normalized_train_intervals))
+assert (int(sample_num*0.2)==len(normalized_val_intervals))
 assert (len(test_intervals)==len(normalized_test_intervals))
 # Examples of normalized intervals
 print "Examples of original train intervals"

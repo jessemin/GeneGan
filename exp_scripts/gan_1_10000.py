@@ -6,4 +6,4 @@ os.system('python gan_barebone.py\
           -save_m=gan_1_10000\
           -save_srv=gan_1_10000\
           -sample_num=10000\
-          -cuda=0'
+          -cuda=0')

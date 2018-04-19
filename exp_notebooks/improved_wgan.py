@@ -561,16 +561,13 @@ class GAN():
             d_losses, d_accuracies, g_losses = [], [], []
 
             for _minibatch_idx in range(int(sample_num/batch_size)):
-                for _ in range(1):
-                # for _ in range(self.n_critic):
+                for _ in range(self.n_critic):
                     dis_idx = np.random.randint(0, y_train.shape[0], batch_size)
                     discriminator_minibatches = y_train[dis_idx]
                     noise = self.X_train[dis_idx].astype(np.float32)
                     d_loss = self.discriminator_model.train_on_batch([discriminator_minibatches, noise],
                                                                      [positive_y, negative_y, dummy_y])
-                    print zip(self.discriminator_model.metrics_names, d_loss)
-                    d_losses.append(d_loss[0])
-                    d_losses.append(d_loss[1])
+                    d_losses.append(d_loss)
                 gen_idx = np.random.randint(0, y_train.shape[0], batch_size)
                 noise = self.X_train[gen_idx].astype(np.float32)
                 g_losses.append(self.generator_model.train_on_batch(noise,
@@ -623,8 +620,8 @@ class GAN():
                 self.discriminator.save(os.path.join(self.model_dir, 'best_discriminator.h5'))
 
             # Save the progress
-            d_loss_history.append(d_losses.mean())
-            g_loss_history.append(g_losses.mean())
+            d_loss_history.append(d_losses)
+            g_loss_history.append(g_losses)
             pearson_train_history.append(avg_pearson)
             pearson_val_history.append(avg_val_pearson)
 

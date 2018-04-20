@@ -1,6 +1,7 @@
 '''
 Wasserstein GeneGan Jupyter Barebone
 
+Reference: https://github.com/keras-team/keras-contrib/blob/master/examples/improved_wgan.py
 Author: Jesik Min
 Overview: Barebone Jupyter notebook version of WGAN.
 Note: Need to activate genomelake environment before running this code. Simply type 'genomelake' in terminal on kali under 'jesikmin'.
@@ -399,7 +400,7 @@ class GAN():
         # 3) Input and Output shape
         self.input_shape = (self.window_size, self.channels,)
         self.output_shape = (self.window_size, 1,)
-        # 4) WGAN
+        # 4) WGAN-specific parameters
         self.n_critic = 5
 
         # Build and compile the discriminator

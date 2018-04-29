@@ -86,7 +86,7 @@ parser.add_argument('-d_freq',
                     '--d_train_freq',
                     required=False,
                     type=int,
-                    default=16,
+                    default=0,
                     dest="d_train_freq",
                     help="Frequency of training discriminator")
 parser.add_argument('-sample_num',
@@ -676,29 +676,6 @@ class GAN():
 
                 self.generator.save(os.path.join(self.model_dir, 'best_generator.h5'))
                 self.discriminator.save(os.path.join(self.model_dir, 'best_discriminator.h5'))
-
-            if len(pearson_train_history) > 0 and np.max(pearson_train_history) < avg_pearson:
-                print "Overfit Pearson on train improved from {} to {}".format(np.max(pearson_train_history), avg_pearson)
-                _write_1D_deeplift_track(predictions.reshape(self.X_train.shape[0], self.window_size),
-                                         normalized_train_intervals, os.path.join(self.srv_dir, 'overfit_train'))
-                _write_1D_deeplift_track(val_predictions.reshape(self.X_val.shape[0], self.window_size),
-                                         normalized_val_intervals, os.path.join(self.srv_dir, 'overfit_val'))
-                f = open(os.path.join(self.srv_dir, 'overfit_meta.txt'), 'wb')
-                f.write(str(epoch) + " " + str(avg_pearson) + " " + str(avg_val_pearson) + "\n")
-
-                # ---------------------
-                # Get generator's prediction and compute overall pearson on test set
-                # ---------------------
-                test_predictions = self.generator.predict(self.X_test).flatten()
-                avg_test_pearson = pearsonr(test_predictions, self.y_test.flatten())
-                print "Overfit Pearson R on Test set: {}".format(avg_test_pearson)
-                f.write("Test Pearson: " + str(avg_test_pearson))
-                f.close()
-                _write_1D_deeplift_track(test_predictions.reshape(self.X_test.shape[0], self.window_size),
-                                         normalized_test_intervals, os.path.join(self.srv_dir, 'overfit_test'))
-
-                self.generator.save(os.path.join(self.model_dir, 'best_overfit_generator.h5'))
-                self.discriminator.save(os.path.join(self.model_dir, 'best_overfit_discriminator.h5'))
 
             # Save the progress
             d_loss_history.append(d_losses.mean())

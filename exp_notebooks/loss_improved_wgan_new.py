@@ -525,14 +525,25 @@ class GAN():
         model = Sequential()
 
         model.add(Conv1D(hidden_filters_1,
-                         hidden_kernel_size_1,
+                         256,
                          padding="same",
                          strides=1,
                          input_shape=self.input_shape,
                          activation='relu',
+                         dilation_rate=5,
                          name='gen_conv1d_1'))
         model.add(Dropout(dropout_rate,
                   name='gen_dropout_1'))
+
+        model.add(Conv1D(hidden_filters_1,
+                         128,
+                         padding="same",
+                         strides=1,
+                         activation='relu',
+                         dilation_rate=5,
+                         name='gen_conv1d_2'))
+        model.add(Dropout(dropout_rate,
+                  name='gen_dropout_2'))
 
         # 2) 1 * 16 Conv1D layers with Linear
         # NOTE: All same padding

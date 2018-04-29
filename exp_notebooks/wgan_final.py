@@ -525,14 +525,35 @@ class GAN():
         model = Sequential()
 
         model.add(Conv1D(hidden_filters_1,
-                         hidden_kernel_size_1,
+                         128,
                          padding="same",
                          strides=1,
                          input_shape=self.input_shape,
                          activation='relu',
+                         dilation_rate=10,
                          name='gen_conv1d_1'))
         model.add(Dropout(dropout_rate,
                   name='gen_dropout_1'))
+
+        model.add(Conv1D(hidden_filters_1,
+                         256,
+                         padding="same",
+                         strides=1,
+                         activation='relu',
+                         dilation_rate=5,
+                         name='gen_conv1d_2'))
+        model.add(Dropout(dropout_rate,
+                  name='gen_dropout_2'))
+
+        model.add(Conv1D(hidden_filters_1,
+                         128,
+                         padding="same",
+                         strides=1,
+                         activation='relu',
+                         dilation_rate=1,
+                         name='gen_conv1d_3'))
+        model.add(Dropout(dropout_rate,
+                  name='gen_dropout_3'))
 
         # 2) 1 * 16 Conv1D layers with Linear
         # NOTE: All same padding
@@ -641,10 +662,6 @@ class GAN():
             # if current pearson on validation set is greatest so far, update the max pearson,
             if max_pearson < avg_val_pearson:
                 print "Perason on val improved from {} to {}".format(max_pearson, avg_val_pearson)
-                _write_1D_deeplift_track(predictions.reshape(self.X_train.shape[0], self.window_size),
-                                         normalized_train_intervals, os.path.join(self.srv_dir, 'train'))
-                _write_1D_deeplift_track(val_predictions.reshape(self.X_val.shape[0], self.window_size),
-                                         normalized_val_intervals, os.path.join(self.srv_dir, 'val'))
                 f = open(os.path.join(self.srv_dir, 'meta.txt'), 'wb')
                 f.write(str(epoch) + " " + str(avg_pearson) + "  " + str(avg_val_pearson) + "\n")
                 max_pearson = avg_val_pearson
@@ -668,6 +685,12 @@ class GAN():
             g_loss_history.append(g_losses)
             pearson_train_history.append(avg_pearson)
             pearson_val_history.append(avg_val_pearson)
+
+            if epoch == epochs - 1:
+                _write_1D_deeplift_track(predictions.reshape(self.X_train.shape[0], self.window_size),
+                                         normalized_train_intervals, os.path.join(self.srv_dir, 'train'))
+                _write_1D_deeplift_track(val_predictions.reshape(self.X_val.shape[0], self.window_size),
+                                         normalized_val_intervals, os.path.join(self.srv_dir, 'val'))
 
             # Print the progress
             print ("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_losses.mean(), 100.0*d_accuracies.mean(), g_losses.mean()))

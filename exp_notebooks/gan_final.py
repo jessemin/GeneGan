@@ -1,9 +1,8 @@
 '''
-Wasserstein GeneGan Jupyter Barebone
+GeneGan Jupyter Barebone
 
-Reference: https://github.com/keras-team/keras-contrib/blob/master/examples/improved_wgan.py
 Author: Jesik Min
-Overview: Barebone Jupyter notebook version of WGAN.
+Overview: Barebone Jupyter notebook version of vanilla-GAN.
 Note: Need to activate genomelake environment before running this code. Simply type 'genomelake' in terminal on kali under 'jesikmin'.
 '''
 
@@ -24,7 +23,6 @@ from scipy.stats.stats import pearsonr,spearmanr
 import tensorflow as tf
 # ArgParsing
 import argparse
-from functools import partial
 parser = argparse.ArgumentParser()
 
 # Setup Arguments
@@ -104,48 +102,36 @@ parser.add_argument('-cuda',
                     type=str,
                     dest="cuda",
                     help="Cuda visible devices")
-parser.add_argument('-n_critic',
-                    '--n_critic',
-                    required=False,
-                    type=int,
-                    default=5,
-                    dest="n_critic",
-                    help="Number of critics")
-parser.add_argument('-w_weight',
-                    '--w_weight',
+parser.add_argument('-g_weight',
+                    '--g_weight',
                     required=False,
                     type=float,
+                    dest="g_weight",
                     default=0.1,
-                    dest="w_weight",
-                    help="Weight for Wasserstein Loss")
+                    help="Weight for gan loss")
 parser.add_argument('-mse_weight',
                     '--mse_weight',
                     required=False,
-                    type=float,
                     default=0.9,
+                    type=float,
                     dest="mse_weight",
-                    help="Weight for MSE Loss")
+                    help="Weight for mse loss")
 parser.add_argument('-g_lr',
                     '--g_lr',
                     required=False,
+                    default=0.002,
                     type=float,
-                    default=0.0001,
                     dest="g_lr",
-                    help="Learning rate for generator")
+                    help="Lr for generator")
 parser.add_argument('-d_lr',
                     '--d_lr',
                     required=False,
+                    default=0.0005,
                     type=float,
-                    default=0.0001,
                     dest="d_lr",
-                    help="Learning rate for discriminator")
+                    help="Lr for discriminator")
 
 args = parser.parse_args()
-
-# Overview of all parameters entered
-print "-" * 40
-print args
-print "-" * 40
 
 # Parse all arguments
 
@@ -157,8 +143,7 @@ model_path = args.model_path
 save_dir = args.save_dir
 sample_num = args.sample_num
 cuda = args.cuda
-n_critic = args.n_critic
-w_weight = args.w_weight
+g_weight = args.g_weight
 mse_weight = args.mse_weight
 g_lr = args.g_lr
 d_lr = args.d_lr
@@ -297,8 +282,7 @@ from keras import metrics
 from keras import losses
 from keras import backend as K
 from keras.callbacks import Callback, TensorBoard, ReduceLROnPlateau, ModelCheckpoint
-from keras.optimizers import Adam, SGD, RMSprop
-from keras.layers.merge import _Merge
+from keras.optimizers import Adam, SGD
 
 
 '''
@@ -410,13 +394,9 @@ def _write_1D_deeplift_track(scores, intervals, file_prefix, merge_type='max',
 
     print 'Wrote bigwig.'
 
-class RandomWeightedAverage(_Merge):
-    """Provides a (random) weighted average between real and generated image samples"""
-    def _merge_function(self, inputs):
-        weights = K.random_uniform((batch_size, 1, 1))
-        return (weights * inputs[0]) + ((1 - weights) * inputs[1])
 
-# WGAN Model (based on WGan)
+
+# GAN Model (based on vanilla gan)
 class GAN():
     def __init__(self, window_size,
                  X_train, y_train,
@@ -440,99 +420,82 @@ class GAN():
         # 3) Input and Output shape
         self.input_shape = (self.window_size, self.channels,)
         self.output_shape = (self.window_size, 1,)
-        # 4) WGAN-specific parameters
-        self.n_critic = n_critic
+
+        # Adam optimizer for generator
+        optimizer = Adam(g_lr, beta_1=0.5, beta_2 = 0.96)
+        # Adam optimizer for discriminator
+        doptimizer = Adam(d_lr, beta_1=0.5, beta_2=0.96)
+        self.optimizer = optimizer
+        self.doptimizer = doptimizer
 
         # Build and compile the discriminator
-        self.generator = self.build_generator()
         self.discriminator = self.build_discriminator()
+        self.discriminator.compile(loss='binary_crossentropy',
+                                   optimizer=doptimizer,
+                                   metrics=['accuracy'])
 
-        for layer in self.discriminator.layers:
-            layer.trainable = False
-        self.discriminator.trainable = False
+        # Build and compile the generator
+        self.generator = self.build_generator()
+        self.generator.compile(loss='binary_crossentropy',
+                               optimizer=optimizer)
 
         # The generator takes noise as input and generated imgs
-        generator_input = Input(shape=self.input_shape)
-        generator_layers = self.generator(generator_input)
-        discriminator_layers_for_generator = self.discriminator(generator_layers)
-        self.generator_model = Model(inputs=[generator_input],
-                                     outputs=[discriminator_layers_for_generator,
-                                              generator_layers])
-        # We use the Adam paramaters from Gulrajani et al.
-        # mix w distance and mse in terms of 0.1, 0.9
-        self.generator_model.compile(optimizer=Adam(g_lr, beta_1=0.5, beta_2=0.9),
-                                               loss=[self.wasserstein_loss, 'mean_squared_error'],
-                                               loss_weights=[w_weight, mse_weight])
+        z = Input(shape=self.input_shape)
+        img = self.generator(z)
 
-        # Now that the generator_model is compiled, we can make the discriminator layers trainable.
-        for layer in self.discriminator.layers:
-            layer.trainable = True
-        for layer in self.generator.layers:
-            layer.trainable = False
-        self.discriminator.trainable = True
-        self.generator.trainable = False
+        # For the combined model we will only train the generator
+        self.discriminator.trainable = False
 
-        real_samples = Input(shape=self.output_shape)
-        generator_input_for_discriminator = Input(shape=self.input_shape)
-        generated_samples_for_discriminator = self.generator(generator_input_for_discriminator)
-        discriminator_output_from_generator = self.discriminator(generated_samples_for_discriminator)
-        discriminator_output_from_real_samples = self.discriminator(real_samples)
+        # The valid takes generated images as input and determines validity
+        valid = self.discriminator(img)
 
-        # We also need to generate weighted-averages of real and generated samples, to use for the gradient norm penalty.
-        averaged_samples = RandomWeightedAverage()([real_samples, generated_samples_for_discriminator])
-        # We then run these samples through the discriminator as well. Note that we never really use the discriminator
-        # output for these samples - we're only running them to get the gradient norm for the gradient penalty loss.
-        averaged_samples_out = self.discriminator(averaged_samples)
-
-        # Use Python partial to provide loss function with additional
-        # 'averaged_samples' argument
-        partial_gp_loss = partial(self.gradient_penalty_loss,
-                                  averaged_samples=averaged_samples,
-                                  gradient_penalty_weight=10)
-        partial_gp_loss.__name__ = 'gradient_penalty' # Keras requires function names
-
-        self.discriminator_model = Model(inputs=[real_samples, generator_input_for_discriminator],
-                                         outputs=[discriminator_output_from_real_samples,
-                                                  discriminator_output_from_generator,
-                                                  averaged_samples_out])
-        # We use the Adam paramaters from Gulrajani et al. We use the Wasserstein loss for both the real and generated
-        # samples, and the gradient penalty loss for the averaged samples.
-        self.discriminator_model.compile(optimizer=Adam(d_lr, beta_1=0.5, beta_2=0.9),
-                                         loss=[self.wasserstein_loss,
-                                               self.wasserstein_loss,
-                                               partial_gp_loss])
-
-    def wasserstein_loss(self, y_true, y_pred):
-        return K.mean(y_true * y_pred)
-
-    def gradient_penalty_loss(self, y_true, y_pred, averaged_samples, gradient_penalty_weight):
-        """ Computes gradient penalty based on prediction and weighted real / fake samples """
-        gradients = K.gradients(y_pred, averaged_samples)[0]
-        # compute the euclidean norm by squaring ...
-        gradients_sqr = K.square(gradients)
-        # ... summing over the rows ...
-        gradients_sqr_sum = K.sum(gradients_sqr, axis=np.arange(1, len(gradients_sqr.shape)))
-        # ... and sqrt
-        gradient_l2_norm = K.sqrt(gradients_sqr_sum)
-        # compute lambda * (1 - ||grad||)^2 still for each single sample
-        gradient_penalty = gradient_penalty_weight * K.square(1 - gradient_l2_norm)
-        # return the mean as loss over all the batch samples
-        return K.mean(gradient_penalty)
+        # The combined model  (stacked generator and discriminator) takes
+        # noise as input => generates images => determines validity 
+        self.combined = Model(z, [valid, img])
+        self.combined.compile(loss=['binary_crossentropy', 'mean_squared_error'],
+                              loss_weights=[g_weight, mse_weight],
+                              optimizer=optimizer)
+        print "Combined Model"
+        print self.combined.summary()
 
     def build_generator(self):
         # Generator
         # 1) 32 * window_size Conv1D layers with RELU and Dropout
+
+        noise_shape = self.input_shape
+
         model = Sequential()
 
         model.add(Conv1D(hidden_filters_1,
-                         hidden_kernel_size_1,
+                         128,
                          padding="same",
                          strides=1,
-                         input_shape=self.input_shape,
+                         input_shape=noise_shape,
                          activation='relu',
+                         dilation_rate=10,
                          name='gen_conv1d_1'))
         model.add(Dropout(dropout_rate,
                   name='gen_dropout_1'))
+
+        model.add(Conv1D(hidden_filters_1,
+                         256,
+                         padding="same",
+                         strides=1,
+                         activation='relu',
+                         dilation_rate=5,
+                         name='gen_conv1d_2'))
+        model.add(Dropout(dropout_rate,
+                  name='gen_dropout_2'))
+
+        model.add(Conv1D(hidden_filters_1,
+                         128,
+                         padding="same",
+                         strides=1,
+                         dilation_rate=1,
+                         activation='relu',
+                         name='gen_conv1d_3'))
+        model.add(Dropout(dropout_rate,
+                  name='gen_dropout_3'))
 
         # 2) 1 * 16 Conv1D layers with Linear
         # NOTE: All same padding
@@ -546,6 +509,9 @@ class GAN():
         print "Generator"
         model.summary()
 
+        noise = Input(shape=noise_shape)
+        img = model(noise)
+
         # load weights for generator if specified
         if model_path:
             print "-"*50
@@ -554,35 +520,38 @@ class GAN():
             print "-"*50
             print model.get_weights()
 
-        return model
+        return Model(noise, img)
 
     def build_discriminator(self):
         # Discriminator
-        # 1) 16 * 200 Conv1D with LeakyRelu, Dropout
+        # 1) 16 * 200 Conv1D with LeakyRelu, Dropout, and BatchNorm
         model = Sequential()
 
         model.add(Conv1D(hidden_filters_1,
                          200,
                          padding="valid",
                          strides=1,
-                         kernel_initializer='he_normal',
                          input_shape=self.output_shape))
-        model.add(LeakyReLU())
+        model.add(LeakyReLU(alpha=0.2))
+        model.add(Dropout(dropout_rate))
+        model.add(BatchNormalization(momentum=0.8))
 
         # 2) Average Pooling, Flatten, Dense, and LeakyRelu
         model.add(AveragePooling1D(25))
         model.add(Flatten())
-        model.add(Dense(int(window_size/16),
-                        kernel_initializer='he_normal'))
-        model.add(LeakyReLU())
+        model.add(Dense(int(window_size/16)))
+        model.add(LeakyReLU(alpha=0.2))
 
-        # 3) Final output with no activation
-        model.add(Dense(1, kernel_initializer="he_normal"))
+        # 3) Final output with sigmoid
+        model.add(Dense(1, activation='sigmoid'))
 
         print "Discriminator"
         model.summary()
 
-        return model
+        img = Input(shape=self.output_shape)
+        validity = model(img)
+
+        return Model(img, validity)
 
     def train(self, epochs, batch_size):
         d_loss_history, g_loss_history = [], []
@@ -594,28 +563,76 @@ class GAN():
         half_batch = int(batch_size / 2)
         d_loss_real, d_loss_fake, g_loss = [1, 0], [1, 0], [1, 0]
 
-        positive_y = np.ones((batch_size, 1),
-                             dtype=np.float32) * (1-smooth_rate)
-        negative_y = -positive_y
-        dummy_y = np.zeros((batch_size, 1),
-                           dtype=np.float32)
-
         for epoch in range(epochs):
             # list for storing losses/accuracies for both discriminator and generator
             d_losses, d_accuracies, g_losses = [], [], []
 
-            for _minibatch_idx in range(int(sample_num/batch_size)):
-                for _ in range(self.n_critic):
-                    dis_idx = np.random.randint(0, y_train.shape[0], batch_size)
-                    discriminator_minibatches = y_train[dis_idx]
-                    noise = self.X_train[dis_idx].astype(np.float32)
-                    d_loss = self.discriminator_model.train_on_batch([discriminator_minibatches, noise],
-                                                                     [positive_y, negative_y, dummy_y])
-                    d_losses.append(d_loss)
+            if len(pearson_val_history) >= 5:
+                if max_pearson > np.max(pearson_val_history[-5:]):
+                    print "Learning rate decay for generator..."
+                    print "Before: {}".format(K.get_value(self.optimizer.lr))
+                    K.set_value(self.optimizer.lr, 0.96 * K.get_value(self.optimizer.lr))
+                    print "After: {}".format(K.get_value(self.optimizer.lr))
+
+            # sufficient number of minibatches for each epoch
+            for _minibatch_idx in range(128):
+
+                # ---------------------
+                #  Train Discriminator
+                # ---------------------
+
+                # Select a random half batch of images
+                dis_idx = np.random.randint(0, y_train.shape[0], half_batch)
+                # Get the real images
+                imgs = y_train[dis_idx]
+
+                # Generate a half batch of new images
+                dis_noise = self.X_train[dis_idx]
+                gen_imgs = self.generator.predict(dis_noise)
+
+                # Train the discriminator with label smoothing
+                smoothed_labels = np.ones((half_batch, 1)) * (1.0-smooth_rate)
+
+                # Train the discriminator for every d_train_freq minibatch
+                if _minibatch_idx % d_train_freq == 0:
+                    # 1) Concatenate the real images and generated images
+                    all_imgs = np.concatenate([imgs, gen_imgs])
+                    # 2) Concatenate the real labels and labels for generated images
+                    all_labels = np.concatenate([smoothed_labels, np.zeros((half_batch, 1))])
+                    # 3) Shuffle two lists in same order
+                    def unison_shuffled_copies(a, b):
+                        assert len(a) == len(b)
+                        p = np.random.permutation(len(a))
+                        return a[p], b[p]
+                    all_imgs, all_labels = unison_shuffled_copies(all_imgs, all_labels)
+                    # 4) Train the discriminator for current batch
+                    d_loss = self.discriminator.train_on_batch(all_imgs, all_labels)
+
+                    # ---------------------
+                    # Store loss and accuracy
+                    # ---------------------
+                    d_losses.append(d_loss[0])
+                    d_accuracies.append(d_loss[1])
+
+                # ---------------------
+                #  Train Generator
+                # ---------------------
+
+                # 1) Randomly choose the batch number of indices
                 gen_idx = np.random.randint(0, y_train.shape[0], batch_size)
-                noise = self.X_train[gen_idx].astype(np.float32)
-                g_losses.append(self.generator_model.train_on_batch(noise,
-                                                                    [positive_y, y_train[gen_idx]]))
+                # 2) Get the randomly chosen inputs (noises in traditional gan)
+                gen_noise = self.X_train[gen_idx]
+                # 3) Create the labels for noises
+                # The generator wants the discriminator to label the generated samples as valid (ones)
+                valid_y = np.array([1] * batch_size) * (1.0-smooth_rate)
+
+                # 4) Train the generator
+                # Discriminator is no longer trained at this point
+                # Generator do its best to fake discriminator
+                g_loss = self.combined.train_on_batch(gen_noise,
+                                                      [valid_y, self.y_train[gen_idx]])
+
+                g_losses.append(g_loss)
 
             # ---------------------
             # Convert each histories into numpy arrays to get means
@@ -640,11 +657,8 @@ class GAN():
 
             # if current pearson on validation set is greatest so far, update the max pearson,
             if max_pearson < avg_val_pearson:
-                print "Perason on val improved from {} to {}".format(max_pearson, avg_val_pearson)
-                _write_1D_deeplift_track(predictions.reshape(self.X_train.shape[0], self.window_size),
-                                         normalized_train_intervals, os.path.join(self.srv_dir, 'train'))
-                _write_1D_deeplift_track(val_predictions.reshape(self.X_val.shape[0], self.window_size),
-                                         normalized_val_intervals, os.path.join(self.srv_dir, 'val'))
+                print "Pearson on val improved from {} to {}".format(max_pearson, avg_val_pearson)
+
                 f = open(os.path.join(self.srv_dir, 'meta.txt'), 'wb')
                 f.write(str(epoch) + " " + str(avg_pearson) + "  " + str(avg_val_pearson) + "\n")
                 max_pearson = avg_val_pearson
@@ -664,14 +678,19 @@ class GAN():
                 self.discriminator.save(os.path.join(self.model_dir, 'best_discriminator.h5'))
 
             # Save the progress
-            d_loss_history.append(d_losses)
-            g_loss_history.append(g_losses)
+            d_loss_history.append(d_losses.mean())
+            g_loss_history.append(g_losses.mean())
             pearson_train_history.append(avg_pearson)
             pearson_val_history.append(avg_val_pearson)
 
+            if epoch == epochs - 1:
+                print "Saving the last model... {}, {}".format(avg_pearson, avg_val_pearson)
+                _write_1D_deeplift_track(predictions.reshape(self.X_train.shape[0], self.window_size),
+                                         normalized_train_intervals, os.path.join(self.srv_dir, 'last_train'))
+                _write_1D_deeplift_track(val_predictions.reshape(self.X_val.shape[0], self.window_size),
+                                         normalized_val_intervals, os.path.join(self.srv_dir, 'last_val'))
             # Print the progress
             print ("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_losses.mean(), 100.0*d_accuracies.mean(), g_losses.mean()))
-
         assert (len(d_loss_history) == len(g_loss_history) == len(pearson_train_history) == len(pearson_val_history))
 
         print "Saving the loss and pearson logs..."
